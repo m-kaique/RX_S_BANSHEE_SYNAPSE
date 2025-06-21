@@ -140,14 +140,17 @@ public:
         // Aguardar cálculo inicial dos indicadores
         Sleep(100);
         
+        // Marcar como inicializado antes da primeira atualização
+        // para permitir que UpdateValues() execute corretamente
+        m_initialized = true;
+
         // Fazer primeira atualização
         if(!UpdateValues())
         {
+            m_initialized = false;
             CCoreUtils::LogError("Falha na atualização inicial das médias");
             return false;
         }
-        
-        m_initialized = true;
         CCoreUtils::LogInfo("MovingAverages inicializado com sucesso para " + symbol);
         
         return true;
