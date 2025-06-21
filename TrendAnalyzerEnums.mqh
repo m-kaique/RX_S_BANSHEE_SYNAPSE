@@ -49,6 +49,28 @@ enum ENUM_MA_ALIGNMENT
 };
 
 //+------------------------------------------------------------------+
+//| Enumerações de Tipo de Sequência                                 |
+//+------------------------------------------------------------------+
+enum ENUM_SEQUENCE_TYPE
+{
+   SEQUENCE_NONE,       // Sem sequência
+   SEQUENCE_ASCENDING,  // Sequência ascendente de topos/fundos
+   SEQUENCE_DESCENDING  // Sequência descendente de topos/fundos
+};
+
+//+------------------------------------------------------------------+
+//| Enumerações de Alinhamento entre Timeframes                      |
+//+------------------------------------------------------------------+
+enum ENUM_TIMEFRAME_ALIGNMENT
+{
+   TF_BULLISH_STRONG,  // Tendências alinhadas fortemente em alta
+   TF_BULLISH_WEAK,    // Tendências levemente alinhadas em alta
+   TF_BEARISH_STRONG,  // Tendências alinhadas fortemente em baixa
+   TF_BEARISH_WEAK,    // Tendências levemente alinhadas em baixa
+   TF_NEUTRAL          // Sem alinhamento predominante
+};
+
+//+------------------------------------------------------------------+
 //| Enumerações de Posição no Canal                                 |
 //+------------------------------------------------------------------+
 enum ENUM_CHANNEL_POSITION
@@ -180,6 +202,34 @@ struct VolumeData
    double   volumeRatio;    // Ratio volume atual/médio
    bool     isHighLiquidity;// Se está em horário de alta liquidez
    bool     isConfirming;   // Se o volume confirma o movimento
+};
+
+//+------------------------------------------------------------------+
+//| Estrutura de Resultado de Tendência                              |
+//+------------------------------------------------------------------+
+struct TrendAnalysisResult
+{
+   ENUM_TREND_DIRECTION trendDirection; // Direção da tendência
+   double               trendStrength;  // Força da tendência (0-100)
+   bool                 hasSequence;    // Possui sequência válida
+   ENUM_SEQUENCE_TYPE   sequenceType;   // Tipo de sequência identificada
+   double               sequenceStrength; // Força da sequência
+   bool                 isValid;        // Resultado válido
+   datetime             lastUpdate;     // Última atualização
+};
+
+//+------------------------------------------------------------------+
+//| Estrutura de Resultado da Sequência de Timeframes                |
+//+------------------------------------------------------------------+
+struct SequenceAnalysisResult
+{
+   ENUM_TIMEFRAMES      timeframe;      // Timeframe analisado
+   int                  stepNumber;     // Número do passo
+   bool                 stepPassed;     // Passo aprovado
+   double               stepStrength;   // Força do passo
+   ENUM_TREND_DIRECTION trendDirection; // Tendência no passo
+   string               failureReason;  // Motivo da falha
+   bool                 isValid;        // Resultado válido
 };
 
 #endif // TREND_ANALYZER_ENUMS_H
