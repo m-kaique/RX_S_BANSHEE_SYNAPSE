@@ -119,6 +119,13 @@ int OnInit()
         Print("ERRO: Parâmetros inválidos");
         return INIT_PARAMETERS_INCORRECT;
     }
+
+    // Aguardar histórico mínimo de H4
+    if(!CCoreUtils::WaitForMinimumBars(EA_Symbol, PERIOD_H4, MA_PERIOD_200))
+    {
+        Print("ERRO: Histórico insuficiente no H4");
+        return INIT_FAILED;
+    }
     
     // Inicializar componentes
     if(!InitializeComponents())

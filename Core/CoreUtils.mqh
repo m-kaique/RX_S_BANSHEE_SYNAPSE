@@ -391,8 +391,34 @@ public:
     static double CalculatePercentChange(double oldValue, double newValue)
     {
         if(oldValue == 0) return 0;
-        
+
         return ((newValue - oldValue) / oldValue) * 100.0;
+    }
+
+    //+------------------------------------------------------------------+
+    //| Aguarda até que exista um mínimo de barras no timeframe        |
+    //+------------------------------------------------------------------+
+    static bool WaitForMinimumBars(string symbol, ENUM_TIMEFRAMES timeframe,
+                                   int minBars, int timeoutSeconds = 30)
+    {
+        datetime startTime = TimeCurrent();
+
+        while(Bars(symbol, timeframe) < minBars)
+        {
+            Print("Aguardando histórico ", EnumToString(timeframe), ": ",
+                  Bars(symbol, timeframe), "/", minBars);
+
+            Sleep(1000);
+            RefreshRates();
+
+            if(TimeCurrent() - startTime > timeoutSeconds)
+            {
+                LogError("Timeout ao aguardar histórico de barras");
+                return false;
+            }
+        }
+
+        return true;
     }
     
     //+------------------------------------------------------------------+
