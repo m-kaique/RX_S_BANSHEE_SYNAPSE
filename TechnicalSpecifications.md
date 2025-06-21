@@ -42,7 +42,7 @@ Identificar contextos de mercado de tendência (ALTA e BAIXA) através de análi
 - **SignalGenerator.mqh**: Geração de sinais baseada em confluência
 - **ConfluenceAnalyzer.mqh**: Análise de confluência entre fatores
 - **SignalValidator.mqh**: Validação e filtragem de sinais
-- **TradeSignal.mqh**: Estrutura e manipulação de sinais de trading
+- **TradingSignal.mqh**: Estrutura e manipulação de sinais de trading
 
 ## Especificações de Timeframes
 
@@ -188,9 +188,9 @@ Identificar contextos de mercado de tendência (ALTA e BAIXA) através de análi
 
 ## Estrutura de Dados
 
-### TradeSignal
+### TradingSignal
 ```mql5
-struct TradeSignal
+struct TradingSignal
 {
    datetime             time;           // Tempo do sinal
    ENUM_SIGNAL_TYPE     type;           // SIGNAL_BUY/SIGNAL_SELL

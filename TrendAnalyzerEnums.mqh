@@ -162,7 +162,7 @@ struct Channel
 //+------------------------------------------------------------------+
 //| Estrutura de Sinal de Trading                                   |
 //+------------------------------------------------------------------+
-struct TradeSignal
+struct TradingSignal
 {
    datetime             time;           // Tempo do sinal
    ENUM_SIGNAL_TYPE     type;           // Tipo do sinal
