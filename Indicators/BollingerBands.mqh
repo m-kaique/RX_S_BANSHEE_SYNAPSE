@@ -112,14 +112,17 @@ public:
         // Aguardar cálculo inicial
         Sleep(100);
         
+        // Marcar como inicializado antes da primeira atualização
+        // permitindo que UpdateValues() acesse os dados do indicador
+        m_initialized = true;
+
         // Fazer primeira atualização
         if(!UpdateValues())
         {
+            m_initialized = false;
             CCoreUtils::LogError("Falha na atualização inicial das Bandas de Bollinger");
             return false;
         }
-        
-        m_initialized = true;
         CCoreUtils::LogInfo("BollingerBands inicializado com sucesso para " + symbol);
         
         return true;
