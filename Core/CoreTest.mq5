@@ -325,10 +325,33 @@ bool TestMathematicalCalculations()
     }
     
     // Teste de ATR
-    double high[] = {100100, 100150, 100200, 100180, 100220};
-    double low[] = {100000, 100050, 100100, 100080, 100120};
-    double close[] = {100050, 100100, 100150, 100120, 100180};
-    
+    double high[];
+    double low[];
+    double close[];
+
+    ArrayResize(high, 5);
+    ArrayResize(low, 5);
+    ArrayResize(close, 5);
+
+    // Preencher dados (mais recente no índice 0)
+    high[0] = 100220;
+    high[1] = 100180;
+    high[2] = 100200;
+    high[3] = 100150;
+    high[4] = 100100;
+
+    low[0] = 100120;
+    low[1] = 100080;
+    low[2] = 100100;
+    low[3] = 100050;
+    low[4] = 100000;
+
+    close[0] = 100180;
+    close[1] = 100120;
+    close[2] = 100150;
+    close[3] = 100100;
+    close[4] = 100050;
+
     ArraySetAsSeries(high, true);
     ArraySetAsSeries(low, true);
     ArraySetAsSeries(close, true);
