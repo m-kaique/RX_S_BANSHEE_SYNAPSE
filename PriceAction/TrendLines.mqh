@@ -342,7 +342,7 @@ private:
     {
         ArrayFree(m_pivots);
         
-        int arraySize = ArraySize(findHighs ? m_high : m_low);
+        int arraySize = findHighs ? ArraySize(m_high) : ArraySize(m_low);
         if(arraySize < 10) return false;
         
         // Procurar pontos de pivô
