@@ -8,6 +8,7 @@
 #ifndef SUPPORT_RESISTANCE_H
 #define SUPPORT_RESISTANCE_H
 
+#include <Object.mqh>
 #include "../TrendAnalyzerEnums.mqh"
 #include "../TrendAnalyzerConfig.mqh"
 #include "../Core/CoreUtils.mqh"

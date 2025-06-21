@@ -8,6 +8,7 @@
 #ifndef TIMEFRAME_SEQUENCER_H
 #define TIMEFRAME_SEQUENCER_H
 
+#include <Object.mqh>
 #include "../TrendAnalyzerEnums.mqh"
 #include "../TrendAnalyzerConfig.mqh"
 #include "../Core/CoreUtils.mqh"
