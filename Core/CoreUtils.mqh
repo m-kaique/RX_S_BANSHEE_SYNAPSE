@@ -66,6 +66,14 @@ public:
         // Verificar se está entre 10h e 16h
         return (dt.hour >= LIQUIDITY_START && dt.hour < LIQUIDITY_END);
     }
+
+    //+------------------------------------------------------------------+
+    //| Alias para compatibilidade - horário de alta liquidez          |
+    //+------------------------------------------------------------------+
+    static bool IsLiquidityHours(datetime time = 0)
+    {
+        return IsHighLiquidityTime(time);
+    }
     
     //+------------------------------------------------------------------+
     //| Verificar se está em horário de negociação                     |

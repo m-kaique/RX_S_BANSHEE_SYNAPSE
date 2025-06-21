@@ -96,6 +96,7 @@
 #define SIGNAL_MIN_CONFIDENCE   70       // Confiança mínima para sinal válido
 #define SIGNAL_STRONG_THRESHOLD 85       // Threshold para sinal forte
 #define SIGNAL_MEDIUM_THRESHOLD 75       // Threshold para sinal médio
+#define SIGNAL_MIN_INTERVAL     300      // Intervalo mínimo entre sinais (seg)
 
 //+------------------------------------------------------------------+
 //| Configurações de Risk Management                                |

@@ -183,6 +183,40 @@ public:
             return CHANNEL_MIDDLE;
         }
     }
+
+    //+------------------------------------------------------------------+
+    //| Verificar se preço está dentro do canal                         |
+    //+------------------------------------------------------------------+
+    bool IsInChannel(double currentPrice)
+    {
+        if(!m_currentChannel.isValid)
+            return false;
+
+        datetime t = TimeCurrent();
+        double upper = CCoreUtils::CalculateLinePrice(
+            m_currentChannel.upperLine.time1,
+            m_currentChannel.upperLine.price1,
+            m_currentChannel.upperLine.slope,
+            t
+        );
+
+        double lower = CCoreUtils::CalculateLinePrice(
+            m_currentChannel.lowerLine.time1,
+            m_currentChannel.lowerLine.price1,
+            m_currentChannel.lowerLine.slope,
+            t
+        );
+
+        return (currentPrice <= upper && currentPrice >= lower);
+    }
+
+    //+------------------------------------------------------------------+
+    //| Obter posição do preço dentro do canal                          |
+    //+------------------------------------------------------------------+
+    ENUM_CHANNEL_POSITION GetPricePositionInChannel(double currentPrice)
+    {
+        return GetPricePosition(currentPrice);
+    }
     
     //+------------------------------------------------------------------+
     //| Obter largura atual do canal                                   |
