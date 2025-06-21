@@ -87,6 +87,7 @@ CTradeExecutor*      g_tradeExecutor = NULL;          // Executor de trades
 
 // Estado do EA
 bool                 g_initialized = false;           // Status de inicialização
+bool                 g_waitForHistory = false;        // Aguardando histórico
 datetime             g_lastSignalCheck = 0;           // Última verificação de sinal
 datetime             g_lastUpdate = 0;                // Última atualização
 datetime             g_sessionStart = 0;              // Início da sessão
@@ -120,34 +121,38 @@ int OnInit()
         return INIT_PARAMETERS_INCORRECT;
     }
 
-    // Aguardar histórico mínimo de H4
-    if(!CCoreUtils::WaitForMinimumBars(EA_Symbol, PERIOD_H4, MA_PERIOD_200))
-    {
-        Print("ERRO: Histórico insuficiente no H4");
-        return INIT_FAILED;
-    }
-    
-    // Inicializar componentes
-    if(!InitializeComponents())
-    {
-        Print("ERRO: Falha na inicialização dos componentes");
-        return INIT_FAILED;
-    }
-    
     // Configurar ambiente
     if(!SetupEnvironment())
     {
         Print("ERRO: Falha na configuração do ambiente");
         return INIT_FAILED;
     }
+
+    // Verificar se já existe histórico suficiente
+    if(CCoreUtils::HasMinimumBars(EA_Symbol, PERIOD_H4, MA_PERIOD_200))
+    {
+        if(!InitializeComponents())
+        {
+            Print("ERRO: Falha na inicialização dos componentes");
+            return INIT_FAILED;
+        }
+        g_initialized = true;
+    }
+    else
+    {
+        PrintFormat("Aguardando %d barras no H4 para iniciar componentes...", MA_PERIOD_200);
+        g_waitForHistory = true;
+    }
     
     // Inicializar estatísticas
     InitializeStatistics();
-    
-    g_initialized = true;
+
     g_lastUpdate = TimeCurrent();
-    
-    Print("EA inicializado com sucesso para ", EA_Symbol);
+
+    if(g_initialized)
+        Print("EA inicializado com sucesso para ", EA_Symbol);
+    else
+        Print("EA em modo de espera - histórico insuficiente");
     Print("Configurações: Lote=", Risk_LotSize, ", Risco=", Risk_RiskPercent, "%, Magic=", EA_MagicNumber);
     
     if(Debug_ShowPanel)
@@ -209,7 +214,39 @@ void OnDeinit(const int reason)
 void OnTick()
 {
     // Verificar se EA está habilitado
-    if(!EA_Enabled || !g_initialized)
+    if(!EA_Enabled)
+    {
+        return;
+    }
+
+    // Se ainda aguardando histórico, verificar condição
+    if(g_waitForHistory && !g_initialized)
+    {
+        if(CCoreUtils::HasMinimumBars(EA_Symbol, PERIOD_H4, MA_PERIOD_200))
+        {
+            Print("Histórico mínimo alcançado. Inicializando componentes...");
+            if(!InitializeComponents())
+            {
+                Print("ERRO: Falha na inicialização dos componentes");
+                return;
+            }
+            g_initialized = true;
+            g_waitForHistory = false;
+            Print("Componentes inicializados com sucesso");
+        }
+        else
+        {
+            static datetime lastLog = 0;
+            if(TimeCurrent() - lastLog >= 60)
+            {
+                PrintFormat("Aguardando histórico H4: %d/%d", Bars(EA_Symbol, PERIOD_H4), MA_PERIOD_200);
+                lastLog = TimeCurrent();
+            }
+            return;
+        }
+    }
+
+    if(!g_initialized)
     {
         return;
     }

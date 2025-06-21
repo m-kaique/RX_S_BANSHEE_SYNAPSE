@@ -422,6 +422,15 @@ public:
 
         return true;
     }
+
+    //+------------------------------------------------------------------+
+    //| Verifica se já existe o mínimo de barras no timeframe           |
+    //+------------------------------------------------------------------+
+    static bool HasMinimumBars(string symbol, ENUM_TIMEFRAMES timeframe,
+                               int minBars)
+    {
+        return (Bars(symbol, timeframe) >= minBars);
+    }
     
     //+------------------------------------------------------------------+
     //| Verificar se valor está em range                               |
