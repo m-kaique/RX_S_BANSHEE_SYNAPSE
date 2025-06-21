@@ -102,6 +102,12 @@
 #define HISTORY_BARS_PATTERN    50       // Barras para padrões
 
 //+------------------------------------------------------------------+
+//| Limites de armazenamento                                         |
+//+------------------------------------------------------------------+
+#define MAX_CONFLUENCE_FACTORS  64       // Máximo de fatores de confluência
+#define MAX_SIGNAL_HISTORY      50       // Tamanho do histórico de sinais
+
+//+------------------------------------------------------------------+
 //| Configurações de Debug e Log                                    |
 //+------------------------------------------------------------------+
 #define DEBUG_MODE              true     // Modo debug ativo
