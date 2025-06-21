@@ -408,8 +408,10 @@ public:
             Print("Aguardando histórico ", EnumToString(timeframe), ": ",
                   Bars(symbol, timeframe), "/", minBars);
 
+            // Aguarda um segundo para permitir carregamento de mais barras
             Sleep(1000);
-            RefreshRates();
+
+            // Evitar chamada direta a RefreshRates para manter compatibilidade
 
             if(TimeCurrent() - startTime > timeoutSeconds)
             {
