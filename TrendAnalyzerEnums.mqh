@@ -89,6 +89,38 @@ enum ENUM_FIBO_SIGNAL
 };
 
 //+------------------------------------------------------------------+
+//| Enumerações de Tipo de Sequência                                |
+//+------------------------------------------------------------------+
+enum ENUM_SEQUENCE_TYPE
+{
+   SEQUENCE_NONE,
+   SEQUENCE_ASCENDING,
+   SEQUENCE_DESCENDING
+};
+
+//+------------------------------------------------------------------+
+//| Enumerações de Alinhamento entre Timeframes                      |
+//+------------------------------------------------------------------+
+enum ENUM_TIMEFRAME_ALIGNMENT
+{
+   TF_BULLISH_STRONG,
+   TF_BULLISH_WEAK,
+   TF_BEARISH_STRONG,
+   TF_BEARISH_WEAK,
+   TF_NEUTRAL
+};
+
+//+------------------------------------------------------------------+
+//| Enumerações de Tipo de Confluência                               |
+//+------------------------------------------------------------------+
+enum ENUM_CONFLUENCE_TYPE
+{
+   CONFLUENCE_BULLISH,
+   CONFLUENCE_BEARISH,
+   CONFLUENCE_NEUTRAL
+};
+
+//+------------------------------------------------------------------+
 //| Estrutura de Linha de Tendência                                 |
 //+------------------------------------------------------------------+
 struct TrendLine
@@ -145,16 +177,74 @@ struct TradeSignal
 };
 
 //+------------------------------------------------------------------+
+//| Estrutura de Resultado de Tendência                              |
+//+------------------------------------------------------------------+
+struct TrendAnalysisResult
+{
+   ENUM_TREND_DIRECTION trendDirection;   // Direção identificada
+   double               trendStrength;    // Força da tendência (0-100)
+   bool                 hasSequence;      // Possui sequência de topos/fundos
+   ENUM_SEQUENCE_TYPE   sequenceType;     // Tipo de sequência
+   double               sequenceStrength; // Força da sequência
+   bool                 isValid;          // Resultado válido
+   datetime             lastUpdate;       // Última atualização
+};
+
+//+------------------------------------------------------------------+
+//| Estrutura de Resultado da Sequência de Timeframes                |
+//+------------------------------------------------------------------+
+struct SequenceAnalysisResult
+{
+   ENUM_TIMEFRAMES      timeframe;      // Timeframe analisado
+   int                  stepNumber;     // Número do passo
+   bool                 stepPassed;     // Passo passou
+   double               stepStrength;   // Força do passo
+   ENUM_TREND_DIRECTION trendDirection; // Direção do passo
+   string               failureReason;  // Motivo da falha
+   bool                 isValid;        // Resultado válido
+};
+
+//+------------------------------------------------------------------+
+//| Estrutura de Fator de Confluência                                |
+//+------------------------------------------------------------------+
+struct ConfluenceFactor
+{
+   string              name;        // Nome do fator
+   ENUM_CONFLUENCE_TYPE type;       // Tipo do fator
+   double              weight;      // Peso do fator
+   string              description; // Descrição
+   bool                isValid;     // Validade
+};
+
+//+------------------------------------------------------------------+
+//| Estrutura de Resultado de Confluência                            |
+//+------------------------------------------------------------------+
+struct ConfluenceResult
+{
+   string    symbol;           // Símbolo analisado
+   datetime  timestamp;        // Momento da análise
+   double    confluenceScore;  // Score geral (0-100)
+   int       bullishFactors;   // Quantidade de fatores bullish
+   int       bearishFactors;   // Quantidade de fatores bearish
+   int       neutralFactors;   // Quantidade de fatores neutros
+   int       totalFactors;     // Total de fatores
+   string    strongestFactor;  // Fator com maior peso
+   string    weakestFactor;    // Fator com menor peso
+   bool      isValid;          // Resultado válido
+};
+
+//+------------------------------------------------------------------+
 //| Estrutura de Análise Multi-Timeframe                            |
 //+------------------------------------------------------------------+
 struct MultiTimeframeAnalysis
 {
-   ENUM_TREND_DIRECTION trendH4;    // Tendência H4
-   ENUM_TREND_DIRECTION trendH1;    // Tendência H1
-   ENUM_TREND_DIRECTION trendM15;   // Tendência M15
-   ENUM_TREND_DIRECTION trendM5;    // Tendência M5
-   bool                 aligned;    // Se os timeframes estão alinhados
-   double               confidence; // Confiança da análise
+   ENUM_TREND_DIRECTION overallDirection;   // Direção geral
+   double               overallStrength;    // Força consolidada
+   ENUM_TIMEFRAME_ALIGNMENT alignment;      // Alinhamento entre timeframes
+   ENUM_TIMEFRAMES      dominantTimeframe;  // Timeframe dominante
+   double               confluenceScore;    // Score de confluência
+   bool                 isValid;            // Resultado válido
+   datetime             lastUpdate;         // Última atualização
 };
 
 //+------------------------------------------------------------------+
