@@ -17,6 +17,20 @@
 class CCoreUtils
 {
 public:
+    // Nível atual de log
+    static int m_logLevel;
+
+    // Definir nível de log
+    static void SetLogLevel(int level)
+    {
+        m_logLevel = level;
+    }
+
+    // Obter nível de log
+    static int GetLogLevel()
+    {
+        return m_logLevel;
+    }
     //+------------------------------------------------------------------+
     //| Converter pontos para preço                                     |
     //+------------------------------------------------------------------+
@@ -319,7 +333,7 @@ public:
     //+------------------------------------------------------------------+
     static void LogInfo(string message)
     {
-        if(DEBUG_MODE)
+        if(m_logLevel <= LOG_LEVEL_INFO && DEBUG_MODE)
         {
             Print(TimeToString(TimeCurrent(), TIME_DATE|TIME_SECONDS), " [INFO] ", message);
         }
@@ -330,7 +344,10 @@ public:
     //+------------------------------------------------------------------+
     static void LogWarning(string message)
     {
-        Print(TimeToString(TimeCurrent(), TIME_DATE|TIME_SECONDS), " [WARNING] ", message);
+        if(m_logLevel <= LOG_LEVEL_WARNING)
+        {
+            Print(TimeToString(TimeCurrent(), TIME_DATE|TIME_SECONDS), " [WARNING] ", message);
+        }
     }
     
     //+------------------------------------------------------------------+
@@ -338,7 +355,10 @@ public:
     //+------------------------------------------------------------------+
     static void LogError(string message)
     {
-        Print(TimeToString(TimeCurrent(), TIME_DATE|TIME_SECONDS), " [ERROR] ", message);
+        if(m_logLevel <= LOG_LEVEL_ERROR)
+        {
+            Print(TimeToString(TimeCurrent(), TIME_DATE|TIME_SECONDS), " [ERROR] ", message);
+        }
     }
     
     //+------------------------------------------------------------------+
@@ -383,6 +403,9 @@ public:
         return (value >= min && value <= max);
     }
 };
+
+// Inicialização do nível de log
+int CCoreUtils::m_logLevel = LOG_LEVEL_INFO;
 
 #endif // CORE_UTILS_H
 
