@@ -164,16 +164,18 @@ struct Channel
 //+------------------------------------------------------------------+
 struct TradingSignal
 {
-   datetime             time;           // Tempo do sinal
-   ENUM_SIGNAL_TYPE     type;           // Tipo do sinal
-   ENUM_SIGNAL_STRENGTH strength;       // Força do sinal
-   double               entryPrice;     // Preço de entrada
-   double               stopLoss;       // Stop Loss
-   double               takeProfit;     // Take Profit
-   string               reason;         // Razão do sinal
-   double               confidence;     // Confiança (0-100%)
-   ENUM_TIMEFRAMES      timeframe;      // Timeframe principal
-   bool                 isValid;        // Se o sinal é válido
+   ENUM_SIGNAL_TYPE     type;        // Tipo do sinal
+   string               symbol;      // Símbolo analisado
+   datetime             timestamp;   // Momento do sinal
+   double               strength;    // Força do sinal (0-100)
+   double               confluence;  // Score de confluência (0-100)
+   double               entryPrice;  // Preço de entrada
+   double               stopLoss;    // Stop Loss
+   double               takeProfit;  // Take Profit
+   double               riskReward;  // Razão risco/recompensa
+   ENUM_TIMEFRAMES      timeframe;   // Timeframe dominante
+   string               reason;      // Razão detalhada
+   bool                 isValid;     // Se o sinal é válido
 };
 
 //+------------------------------------------------------------------+
