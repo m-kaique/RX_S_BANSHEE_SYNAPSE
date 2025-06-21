@@ -205,16 +205,12 @@ private:
     //+------------------------------------------------------------------+
     void InitializeConfluenceResult(ConfluenceResult &result)
     {
-        result.symbol = "";
-        result.timestamp = 0;
         result.confluenceScore = 0;
         result.bullishFactors = 0;
         result.bearishFactors = 0;
         result.neutralFactors = 0;
-        result.totalFactors = 0;
-        result.strongestFactor = "";
-        result.weakestFactor = "";
         result.isValid = false;
+        result.lastUpdate = 0;
     }
     
     //+------------------------------------------------------------------+

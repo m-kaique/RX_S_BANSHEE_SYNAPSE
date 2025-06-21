@@ -29,11 +29,11 @@ private:
     CConfluenceAnalyzer* m_confluence;       // Analisador de confluência
     
     // Sinais gerados
-    TradingSignal        m_currentSignal;    // Sinal atual
-    TradingSignal        m_lastSignal;       // Último sinal
+    TradeSignal          m_currentSignal;    // Sinal atual
+    TradeSignal          m_lastSignal;       // Último sinal
     
     // Histórico de sinais
-    TradingSignal        m_signalHistory[];  // Histórico
+    TradeSignal          m_signalHistory[];  // Histórico
     int                  m_historySize;      // Tamanho do histórico
     
     // Estado do gerador
@@ -194,12 +194,12 @@ public:
     //+------------------------------------------------------------------+
     //| Obter sinal atual                                              |
     //+------------------------------------------------------------------+
-    TradingSignal GetCurrentSignal() const { return m_currentSignal; }
+    TradeSignal GetCurrentSignal() const { return m_currentSignal; }
     
     //+------------------------------------------------------------------+
     //| Obter último sinal                                             |
     //+------------------------------------------------------------------+
-    TradingSignal GetLastSignal() const { return m_lastSignal; }
+    TradeSignal GetLastSignal() const { return m_lastSignal; }
     
     //+------------------------------------------------------------------+
     //| Verificar se há sinal válido                                   |
@@ -244,7 +244,7 @@ public:
     //+------------------------------------------------------------------+
     //| Obter histórico de sinais                                      |
     //+------------------------------------------------------------------+
-    int GetSignalHistory(TradingSignal &history[])
+    int GetSignalHistory(TradeSignal &history[])
     {
         if(m_historySize == 0) return 0;
         
@@ -267,7 +267,7 @@ private:
     //+------------------------------------------------------------------+
     //| Inicializar estrutura de sinal                                 |
     //+------------------------------------------------------------------+
-    void InitializeSignal(TradingSignal &signal)
+    void InitializeSignal(TradeSignal &signal)
     {
         signal.type = SIGNAL_NONE;
         signal.symbol = "";
@@ -561,7 +561,7 @@ private:
     //+------------------------------------------------------------------+
     //| Adicionar sinal ao histórico                                   |
     //+------------------------------------------------------------------+
-    void AddToHistory(const TradingSignal &signal)
+    void AddToHistory(const TradeSignal &signal)
     {
         if(m_historySize >= MAX_SIGNAL_HISTORY)
         {

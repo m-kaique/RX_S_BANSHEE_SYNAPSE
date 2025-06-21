@@ -182,5 +182,95 @@ struct VolumeData
    bool     isConfirming;   // Se o volume confirma o movimento
 };
 
+//+------------------------------------------------------------------+
+//| Estrutura de Resultado de Análise de Tendência                  |
+//+------------------------------------------------------------------+
+struct TrendAnalysisResult
+{
+    ENUM_TREND_DIRECTION trendDirection;    // Direção da tendência
+    double               trendStrength;     // Força da tendência (0-100)
+    bool                 hasSequence;       // Se tem sequência válida
+    ENUM_SEQUENCE_TYPE   sequenceType;      // Tipo da sequência
+    double               sequenceStrength;  // Força da sequência (0-100)
+    bool                 isValid;           // Se o resultado é válido
+    datetime             lastUpdate;        // Última atualização
+};
+
+//+------------------------------------------------------------------+
+//| Estrutura de Análise Multi-Timeframe                            |
+//+------------------------------------------------------------------+
+struct MultiTimeframeAnalysis
+{
+    ENUM_TREND_DIRECTION overallDirection;  // Direção geral
+    double               overallStrength;   // Força geral (0-100)
+    ENUM_TIMEFRAME_ALIGNMENT alignment;     // Alinhamento dos timeframes
+    ENUM_TIMEFRAMES      dominantTimeframe; // Timeframe dominante
+    double               confluenceScore;   // Score de confluência (0-100)
+    bool                 isValid;           // Se a análise é válida
+    datetime             lastUpdate;        // Última atualização
+};
+
+//+------------------------------------------------------------------+
+//| Estrutura de Resultado de Confluência                           |
+//+------------------------------------------------------------------+
+struct ConfluenceResult
+{
+    double   confluenceScore;   // Score total de confluência (0-100)
+    int      bullishFactors;    // Número de fatores bullish
+    int      bearishFactors;    // Número de fatores bearish
+    int      neutralFactors;    // Número de fatores neutros
+    bool     isValid;           // Se o resultado é válido
+    datetime lastUpdate;        // Última atualização
+};
+
+//+------------------------------------------------------------------+
+//| Estrutura de Fator de Confluência                               |
+//+------------------------------------------------------------------+
+struct ConfluenceFactor
+{
+    string           factorName;   // Nome do fator
+    ENUM_SIGNAL_TYPE direction;    // Direção do fator
+    double           weight;       // Peso do fator (0-1)
+    double           confidence;   // Confiança do fator (0-100)
+    bool             isActive;     // Se o fator está ativo
+};
+
+//+------------------------------------------------------------------+
+//| Estrutura de Resultado de Análise de Sequência                  |
+//+------------------------------------------------------------------+
+struct SequenceAnalysisResult
+{
+    ENUM_TIMEFRAMES      timeframe;    // Timeframe analisado
+    ENUM_TREND_DIRECTION direction;    // Direção identificada
+    double               strength;     // Força da sequência (0-100)
+    bool                 isValid;      // Se o resultado é válido
+    bool                 allowsEntry;  // Se permite entrada
+    datetime             timestamp;    // Timestamp da análise
+};
+
+//+------------------------------------------------------------------+
+//| Enumeração de Alinhamento de Timeframes                         |
+//+------------------------------------------------------------------+
+enum ENUM_TIMEFRAME_ALIGNMENT
+{
+    TF_BULLISH_STRONG,    // Alinhamento bullish forte (3+ timeframes)
+    TF_BULLISH_WEAK,      // Alinhamento bullish fraco (2 timeframes)
+    TF_BEARISH_STRONG,    // Alinhamento bearish forte (3+ timeframes)
+    TF_BEARISH_WEAK,      // Alinhamento bearish fraco (2 timeframes)
+    TF_NEUTRAL            // Sem alinhamento claro
+};
+
+//+------------------------------------------------------------------+
+//| Enumeração de Tipo de Sequência                                 |
+//+------------------------------------------------------------------+
+enum ENUM_SEQUENCE_TYPE
+{
+    SEQUENCE_NONE,                // Nenhuma sequência identificada
+    SEQUENCE_ASCENDING_TOPS,      // Topos ascendentes
+    SEQUENCE_DESCENDING_TOPS,     // Topos descendentes
+    SEQUENCE_ASCENDING_BOTTOMS,   // Fundos ascendentes
+    SEQUENCE_DESCENDING_BOTTOMS   // Fundos descendentes
+};
+
 #endif // TREND_ANALYZER_ENUMS_H
 

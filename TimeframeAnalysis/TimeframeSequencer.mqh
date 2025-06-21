@@ -235,12 +235,11 @@ private:
     void InitializeSequenceResult(SequenceAnalysisResult &result)
     {
         result.timeframe = PERIOD_CURRENT;
-        result.stepNumber = 0;
-        result.stepPassed = false;
-        result.stepStrength = 0;
-        result.trendDirection = TREND_NEUTRAL;
-        result.failureReason = "";
+        result.direction = TREND_NEUTRAL;
+        result.strength = 0;
         result.isValid = false;
+        result.allowsEntry = false;
+        result.timestamp = 0;
     }
     
     //+------------------------------------------------------------------+

@@ -328,6 +328,37 @@ public:
         
         return (trendH4 == trendH1 && trendH1 == trendM15 && trendM15 == trendM5);
     }
+
+    //+------------------------------------------------------------------+
+    //| Analisar tendência com símbolo específico                       |
+    //+------------------------------------------------------------------+
+    bool AnalyzeTrend(string symbol, ENUM_TIMEFRAMES tf)
+    {
+        if(symbol != m_symbol)
+        {
+            CCoreUtils::LogWarning("Símbolo diferente do inicializado: " + symbol);
+        }
+
+        return (AnalyzeTrend(tf) != TREND_NEUTRAL);
+    }
+
+    //+------------------------------------------------------------------+
+    //| Obter resultado da análise                                      |
+    //+------------------------------------------------------------------+
+    TrendAnalysisResult GetAnalysisResult()
+    {
+        TrendAnalysisResult result;
+
+        result.trendDirection = m_lastTrendM15; // Usar M15 como padrão
+        result.trendStrength = GetTrendStrength(PERIOD_M15);
+        result.hasSequence = (result.trendDirection != TREND_NEUTRAL);
+        result.sequenceType = DetermineSequenceType();
+        result.sequenceStrength = result.trendStrength;
+        result.isValid = m_initialized;
+        result.lastUpdate = TimeCurrent();
+
+        return result;
+    }
     
     //+------------------------------------------------------------------+
     //| Obter símbolo atual                                             |
@@ -395,8 +426,25 @@ private:
             case PERIOD_M15: m_lastTrendM15 = trend; break;
             case PERIOD_M5:  m_lastTrendM5 = trend; break;
         }
-        
+
         m_lastUpdate = TimeCurrent();
+    }
+
+    //+------------------------------------------------------------------+
+    //| Determinar tipo de sequência                                    |
+    //+------------------------------------------------------------------+
+    ENUM_SEQUENCE_TYPE DetermineSequenceType()
+    {
+        if(m_lastTrendM15 == TREND_UP)
+        {
+            return SEQUENCE_ASCENDING_BOTTOMS;
+        }
+        else if(m_lastTrendM15 == TREND_DOWN)
+        {
+            return SEQUENCE_DESCENDING_TOPS;
+        }
+
+        return SEQUENCE_NONE;
     }
 };
 

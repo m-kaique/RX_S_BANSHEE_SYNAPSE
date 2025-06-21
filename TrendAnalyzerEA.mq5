@@ -11,7 +11,11 @@
 #property version   "1.0"
 #property description "Expert Advisor para análise de tendência WINM25"
 
-// Incluir todos os módulos necessários
+// Incluir bibliotecas padrão PRIMEIRO
+#include <Trade\Trade.mqh>
+#include <Object.mqh>
+
+// Depois incluir módulos locais
 #include "TrendAnalyzerEnums.mqh"
 #include "TrendAnalyzerConfig.mqh"
 #include "Core/CoreUtils.mqh"
@@ -95,8 +99,8 @@ double               g_dailyProfit = 0;               // Lucro do dia
 double               g_dailyLoss = 0;                 // Perda do dia
 
 // Controle de sinais
-TradingSignal        g_currentSignal;                 // Sinal atual
-TradingSignal        g_lastSignal;                    // Último sinal
+TradeSignal          g_currentSignal;                 // Sinal atual
+TradeSignal          g_lastSignal;                    // Último sinal
 bool                 g_signalActive = false;          // Sinal ativo
 
 // Estatísticas
@@ -542,7 +546,7 @@ void CheckForTradingSignals()
     }
     
     // Obter sinal atual
-    TradingSignal signal = g_signalGenerator.GetCurrentSignal();
+    TradeSignal signal = g_signalGenerator.GetCurrentSignal();
     
     // Validar sinal
     if(!ValidateSignal(signal))
@@ -566,7 +570,7 @@ void CheckForTradingSignals()
 //+------------------------------------------------------------------+
 //| Validar sinal de trading                                        |
 //+------------------------------------------------------------------+
-bool ValidateSignal(const TradingSignal &signal)
+bool ValidateSignal(const TradeSignal &signal)
 {
     // Verificar se sinal é válido
     if(!signal.isValid || signal.type == SIGNAL_NONE)
@@ -629,7 +633,7 @@ bool ValidateSignal(const TradingSignal &signal)
 //+------------------------------------------------------------------+
 //| Executar sinal de trading                                       |
 //+------------------------------------------------------------------+
-void ExecuteSignal(const TradingSignal &signal)
+void ExecuteSignal(const TradeSignal &signal)
 {
     if(g_tradeExecutor == NULL)
     {
@@ -724,7 +728,7 @@ void PrintFinalStatistics()
 //+------------------------------------------------------------------+
 //| Log de sinal                                                    |
 //+------------------------------------------------------------------+
-void LogSignal(const TradingSignal &signal)
+void LogSignal(const TradeSignal &signal)
 {
     string logMessage = "SINAL: " + EnumToString(signal.type) + 
                        " | Força: " + DoubleToString(signal.strength, 1) + "%" +

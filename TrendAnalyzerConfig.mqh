@@ -132,5 +132,14 @@
 #define UPDATE_FREQUENCY_MS     1000     // Frequência de atualização (ms)
 #define CACHE_VALIDITY_SECONDS  60       // Validade do cache (segundos)
 
+//+------------------------------------------------------------------+
+//| Configurações de Sinal e Confluência                            |
+//+------------------------------------------------------------------+
+#define MAX_SIGNAL_HISTORY      100      // Máximo de sinais no histórico
+#define SIGNAL_MIN_INTERVAL     300      // Intervalo mínimo entre sinais (segundos)
+#define MIN_SIGNAL_STRENGTH     70.0     // Força mínima do sinal (%)
+#define MIN_CONFLUENCE_SCORE    60.0     // Score mínimo de confluência (%)
+#define MAX_CONFLUENCE_FACTORS  20       // Máximo de fatores de confluência
+
 #endif // TREND_ANALYZER_CONFIG_H
 
