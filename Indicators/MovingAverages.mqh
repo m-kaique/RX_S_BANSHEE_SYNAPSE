@@ -8,6 +8,7 @@
 #ifndef MOVING_AVERAGES_H
 #define MOVING_AVERAGES_H
 
+#include <Object.mqh>
 #include "../TrendAnalyzerEnums.mqh"
 #include "../TrendAnalyzerConfig.mqh"
 #include "../Core/CoreUtils.mqh"

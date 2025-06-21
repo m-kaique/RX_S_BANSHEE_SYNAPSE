@@ -8,6 +8,7 @@
 #ifndef FIBONACCI_H
 #define FIBONACCI_H
 
+#include <Object.mqh>
 #include "../TrendAnalyzerEnums.mqh"
 #include "../TrendAnalyzerConfig.mqh"
 #include "../Core/CoreUtils.mqh"

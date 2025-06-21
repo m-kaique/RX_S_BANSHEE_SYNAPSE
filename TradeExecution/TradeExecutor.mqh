@@ -8,6 +8,7 @@
 #ifndef TRADE_EXECUTOR_H
 #define TRADE_EXECUTOR_H
 
+#include <Object.mqh>
 #include <Trade/Trade.mqh>
 #include "../TrendAnalyzerEnums.mqh"
 #include "../TrendAnalyzerConfig.mqh"

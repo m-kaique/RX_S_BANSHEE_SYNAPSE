@@ -8,6 +8,7 @@
 #ifndef ADVANCED_PATTERNS_H
 #define ADVANCED_PATTERNS_H
 
+#include <Object.mqh>
 #include "../TrendAnalyzerEnums.mqh"
 #include "../TrendAnalyzerConfig.mqh"
 #include "../Core/CoreUtils.mqh"
