@@ -187,8 +187,52 @@ public:
                 }
             }
         }
-        
+
         return false;
+    }
+
+    //+------------------------------------------------------------------+
+    //| Obter suportes próximos                                         |
+    //+------------------------------------------------------------------+
+    int GetNearbySupports(double currentPrice, double tolerance, double &levels[])
+    {
+        ArrayFree(levels);
+        int count = 0;
+
+        for(int i = 0; i < ArraySize(m_levels); i++)
+        {
+            if(m_levels[i].isSupport &&
+               CCoreUtils::IsPriceWithinTolerance(currentPrice, m_levels[i].price, tolerance, m_symbol))
+            {
+                ArrayResize(levels, count + 1);
+                levels[count] = m_levels[i].price;
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    //+------------------------------------------------------------------+
+    //| Obter resistências próximas                                    |
+    //+------------------------------------------------------------------+
+    int GetNearbyResistances(double currentPrice, double tolerance, double &levels[])
+    {
+        ArrayFree(levels);
+        int count = 0;
+
+        for(int i = 0; i < ArraySize(m_levels); i++)
+        {
+            if(!m_levels[i].isSupport &&
+               CCoreUtils::IsPriceWithinTolerance(currentPrice, m_levels[i].price, tolerance, m_symbol))
+            {
+                ArrayResize(levels, count + 1);
+                levels[count] = m_levels[i].price;
+                count++;
+            }
+        }
+
+        return count;
     }
     
     //+------------------------------------------------------------------+

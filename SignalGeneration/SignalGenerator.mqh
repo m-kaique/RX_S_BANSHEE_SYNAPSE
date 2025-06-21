@@ -478,7 +478,23 @@ private:
     void CalculateStopLossAndTakeProfit(ENUM_TREND_DIRECTION direction,
                                        const ConfluenceResult &confluence)
     {
-        double atr = CCoreUtils::CalculateATR(NULL, NULL, NULL, 20, 20); // Simplificado
+        double atr = 0;
+        double high[], low[], close[];
+        ArraySetAsSeries(high, true);
+        ArraySetAsSeries(low, true);
+        ArraySetAsSeries(close, true);
+
+        if(CopyHigh(m_symbol, PERIOD_CURRENT, 0, 21, high) < 0 ||
+           CopyLow(m_symbol, PERIOD_CURRENT, 0, 21, low) < 0 ||
+           CopyClose(m_symbol, PERIOD_CURRENT, 0, 21, close) < 0)
+        {
+            atr = 0;
+        }
+        else
+        {
+            atr = CCoreUtils::CalculateATR(high, low, close, 20);
+        }
+
         if(atr <= 0) atr = 100; // Valor padrão em pontos
         
         double stopDistance = atr * STOP_LOSS_ATR_MULTIPLIER;

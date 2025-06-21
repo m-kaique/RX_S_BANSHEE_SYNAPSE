@@ -199,8 +199,8 @@ bool TestPriceActionModule()
     
     if(trendLines.Initialize(TestSymbol))
     {
-        bool hasLTA = trendLines.HasValidLTA();
-        bool hasLTB = trendLines.HasValidLTB();
+        bool hasLTA = trendLines.IsLTAValid();
+        bool hasLTB = trendLines.IsLTBValid();
         Print("TrendLines: OK - LTA: ", (hasLTA ? "SIM" : "NÃO"), ", LTB: ", (hasLTB ? "SIM" : "NÃO"));
     }
     else

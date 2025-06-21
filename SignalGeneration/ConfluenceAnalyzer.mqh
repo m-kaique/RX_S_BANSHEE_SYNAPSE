@@ -117,7 +117,7 @@ public:
         
         allInitialized &= m_trendLines.Initialize(symbol);
         allInitialized &= m_supRes.Initialize(symbol);
-        allInitialized &= m_channels.Initialize(symbol);
+        allInitialized &= m_channels.Initialize(symbol, m_trendLines);
         allInitialized &= m_movingAverages.Initialize(symbol);
         allInitialized &= m_vwap.Initialize(symbol);
         allInitialized &= m_bollingerBands.Initialize(symbol);
@@ -241,9 +241,9 @@ private:
     void AnalyzeTrendLinesConfluence(double currentPrice)
     {
         // Analisar LTA (Linha de Tendência de Alta)
-        if(m_trendLines.HasValidLTA())
+        if(m_trendLines.IsLTAValid())
         {
-            double ltaLevel = m_trendLines.GetCurrentLTALevel();
+            double ltaLevel = m_trendLines.GetCurrentLTALevel(TimeCurrent());
             bool nearLTA = m_trendLines.IsPriceNearLTA(currentPrice, TOLERANCE_TRENDLINE);
             
             if(nearLTA)
@@ -262,9 +262,9 @@ private:
         }
         
         // Analisar LTB (Linha de Tendência de Baixa)
-        if(m_trendLines.HasValidLTB())
+        if(m_trendLines.IsLTBValid())
         {
-            double ltbLevel = m_trendLines.GetCurrentLTBLevel();
+            double ltbLevel = m_trendLines.GetCurrentLTBLevel(TimeCurrent());
             bool nearLTB = m_trendLines.IsPriceNearLTB(currentPrice, TOLERANCE_TRENDLINE);
             
             if(nearLTB)
