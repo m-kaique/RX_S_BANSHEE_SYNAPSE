@@ -137,16 +137,6 @@ public:
             return false;
         }
         
-
-        // Verificar histórico disponível para cada timeframe
-        if(Bars(m_symbol, PERIOD_M15) < MA_PERIOD_21 ||
-           Bars(m_symbol, PERIOD_H1)  < MA_PERIOD_50 ||
-           Bars(m_symbol, PERIOD_H4)  < MA_PERIOD_200)
-        {
-            CCoreUtils::LogError("Histórico insuficiente para MovingAverages");
-            return false;
-        }
-
         // Aguardar cálculo inicial dos indicadores
         Sleep(100);
         

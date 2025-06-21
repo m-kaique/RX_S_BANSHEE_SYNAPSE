@@ -109,13 +109,6 @@ public:
             return false;
         }
         
-        // Verificar histórico disponível
-        if(Bars(m_symbol, PERIOD_M15) < BB_PERIOD)
-        {
-            CCoreUtils::LogError("Histórico insuficiente para BollingerBands");
-            return false;
-        }
-
         // Aguardar cálculo inicial
         Sleep(100);
         
