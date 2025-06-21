@@ -370,7 +370,15 @@ bool InitializeComponents()
     g_tradeExecutor.SetRiskRewardRatio(TP_RiskRewardRatio);
     g_tradeExecutor.SetTrailingStop(SL_UseTrailingStop, SL_TrailingDistance);
     g_tradeExecutor.SetPartialClose(TP_UsePartialClose, TP_PartialPercent);
-    
+
+    // Verificar se todos os módulos internos foram inicializados
+    Sleep(200);
+    if(!g_signalGenerator.AreModulesInitialized() || !g_tradeExecutor.IsInitialized())
+    {
+        Print("ERRO: Módulos não foram inicializados corretamente");
+        return false;
+    }
+
     return true;
 }
 
