@@ -138,5 +138,13 @@
 #define UPDATE_FREQUENCY_MS     1000     // Frequência de atualização (ms)
 #define CACHE_VALIDITY_SECONDS  60       // Validade do cache (segundos)
 
+//+------------------------------------------------------------------+
+//| Limiares de Força para o Sequenciador                            |
+//+------------------------------------------------------------------+
+#define MIN_H4_TREND_STRENGTH   60       // Força mínima da tendência no H4
+#define MIN_H1_TREND_STRENGTH   50       // Força mínima da tendência no H1
+#define MIN_M15_TREND_STRENGTH  40       // Força mínima da tendência no M15
+#define MIN_SEQUENCE_STRENGTH   50       // Força mínima da sequência completa
+
 #endif // TREND_ANALYZER_CONFIG_H
 

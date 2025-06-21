@@ -369,19 +369,19 @@ private:
             CCoreUtils::LogError("Analisador nulo para timeframe " + EnumToString(tf));
             return false;
         }
-        
+
         // Executar análise de tendência
-        if(!analyzer.AnalyzeTrend(m_symbol, tf))
-        {
-            CCoreUtils::LogWarning("Falha na análise de tendência para " + EnumToString(tf));
-            return false;
-        }
-        
-        // Obter resultado
-        result = analyzer.GetAnalysisResult();
-        result.isValid = true;
-        result.lastUpdate = TimeCurrent();
-        
+        ENUM_TREND_DIRECTION direction = analyzer.AnalyzeTrend(tf);
+
+        // Preencher resultado utilizando as informações disponíveis no analisador
+        result.trendDirection   = direction;
+        result.trendStrength    = analyzer.GetTrendStrength(tf);
+        result.hasSequence      = false;
+        result.sequenceType     = SEQUENCE_NONE;
+        result.sequenceStrength = 0;
+        result.isValid          = true;
+        result.lastUpdate       = TimeCurrent();
+
         return true;
     }
     
