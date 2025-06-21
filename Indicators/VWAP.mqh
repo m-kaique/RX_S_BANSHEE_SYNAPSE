@@ -106,11 +106,7 @@ public:
         m_lastReset = GetDayStart(currentTime);
         
         // Calcular VWAP inicial
-        if(!Calculate(symbol, PERIOD_M15))
-        {
-            CCoreUtils::LogError("Falha no cálculo inicial do VWAP");
-            return false;
-        }
+        Calculate(symbol, PERIOD_M15);
         
         m_initialized = true;
         CCoreUtils::LogInfo("VWAP inicializado com sucesso para " + symbol);

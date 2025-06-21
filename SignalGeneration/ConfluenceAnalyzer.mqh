@@ -117,7 +117,7 @@ public:
         
         allInitialized &= m_trendLines.Initialize(symbol);
         allInitialized &= m_supRes.Initialize(symbol);
-        allInitialized &= m_channels.Initialize(symbol);
+        allInitialized &= m_channels.Initialize(symbol, m_trendLines);
         allInitialized &= m_movingAverages.Initialize(symbol);
         allInitialized &= m_vwap.Initialize(symbol);
         allInitialized &= m_bollingerBands.Initialize(symbol);

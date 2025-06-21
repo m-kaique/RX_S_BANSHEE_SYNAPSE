@@ -158,6 +158,13 @@
 #define MIN_M15_TREND_STRENGTH    60.0
 #define MIN_SEQUENCE_STRENGTH     50.0
 
+// Tolerâncias adicionais
+#define TOLERANCE_BB              10     // Tolerância para Bandas de Bollinger
+#define TOLERANCE_FIBONACCI       TOLERANCE_FIBO
+
+// Barras históricas específicas
+#define HISTORY_BARS_FIBONACCI    200    // Barras para cálculo do Fibonacci
+
 #define TOLERANCE_MA              TOLERANCE_MA_NEAR
 #define TOLERANCE_SUPPORT_RESISTANCE TOLERANCE_SR_LEVEL
 
