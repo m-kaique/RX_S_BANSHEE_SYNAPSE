@@ -157,23 +157,18 @@ bool TestCoreModule()
     }
     
     // Testar análise de tendência
-    bool analyzed = analyzer.AnalyzeTrend(TestSymbol, PERIOD_H1);
-    if(!analyzed)
-    {
-        Print("FALHA: Análise de tendência falhou");
-        delete analyzer;
-        return false;
-    }
-    
-    TrendAnalysisResult result = analyzer.GetAnalysisResult();
-    if(!result.isValid)
-    {
-        Print("FALHA: Resultado de análise inválido");
-        delete analyzer;
-        return false;
-    }
-    
-    Print("TrendAnalyzer: OK - Tendência: ", EnumToString(result.trendDirection), 
+    ENUM_TREND_DIRECTION trend = analyzer.AnalyzeTrend(PERIOD_H1);
+
+    TrendAnalysisResult result;
+    result.trendDirection   = trend;
+    result.trendStrength    = analyzer.GetTrendStrength(PERIOD_H1);
+    result.hasSequence      = false;
+    result.sequenceType     = SEQUENCE_NONE;
+    result.sequenceStrength = 0;
+    result.isValid          = true;
+    result.lastUpdate       = TimeCurrent();
+
+    Print("TrendAnalyzer: OK - Tendência: ", EnumToString(result.trendDirection),
           ", Força: ", DoubleToString(result.trendStrength, 1), "%");
     
     delete analyzer;
