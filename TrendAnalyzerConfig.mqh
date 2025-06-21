@@ -53,6 +53,12 @@
 #define TOLERANCE_SR_LEVEL  20           // Tolerância para suporte/resistência
 #define TOLERANCE_MA_NEAR   15           // Tolerância para "perto das médias"
 #define TOLERANCE_FIBO      10           // Tolerância para níveis de Fibonacci
+// Aliases e tolerâncias adicionais
+#define TOLERANCE_MA        TOLERANCE_MA_NEAR
+#define TOLERANCE_SUPPORT_RESISTANCE TOLERANCE_SR_LEVEL
+#define TOLERANCE_BB        10           // Tolerância para Bandas de Bollinger
+#define TOLERANCE_FIBONACCI TOLERANCE_FIBO
+#define TOLERANCE_VWAP      10           // Tolerância para VWAP
 
 //+------------------------------------------------------------------+
 //| Configurações de Volume                                          |
@@ -61,6 +67,11 @@
 #define VOLUME_HIGH_RATIO   1.5          // Ratio para volume alto
 #define LIQUIDITY_START     10           // Início alta liquidez (10h)
 #define LIQUIDITY_END       16           // Fim alta liquidez (16h)
+// Parâmetros adicionais para análise de volume
+#define VOLUME_ANALYSIS_PERIOD   VOLUME_PERIOD
+#define HIGH_VOLUME_THRESHOLD    1.5
+#define LOW_VOLUME_THRESHOLD     0.7
+#define VOLUME_CLIMAX_MULTIPLIER 3.0
 
 //+------------------------------------------------------------------+
 //| Configurações de Price Action                                   |
@@ -92,6 +103,21 @@
 #define DEFAULT_STOP_LOSS_POINTS    100  // Stop Loss padrão em pontos
 #define DEFAULT_TAKE_PROFIT_POINTS  200  // Take Profit padrão em pontos
 #define RISK_REWARD_RATIO           2.0  // Ratio Risco/Recompensa
+#define STOP_LOSS_ATR_MULTIPLIER    2.0  // Multiplicador ATR para Stop Loss
+
+//+------------------------------------------------------------------+
+//| Pesos e Limiares de Confluência                                  |
+//+------------------------------------------------------------------+
+#define WEIGHT_TRENDLINE            1.0
+#define WEIGHT_SUPPORT_RESISTANCE   1.0
+#define WEIGHT_CHANNEL              1.0
+#define WEIGHT_MOVING_AVERAGES      1.0
+#define WEIGHT_VWAP                 1.0
+#define WEIGHT_BOLLINGER            1.0
+#define WEIGHT_FIBONACCI            1.0
+#define WEIGHT_VOLUME               1.0
+#define MIN_SIGNAL_STRENGTH         50    // Força mínima do sinal (%)
+#define MIN_CONFLUENCE_SCORE        60    // Score mínimo de confluência (%)
 
 //+------------------------------------------------------------------+
 //| Configurações de Análise Histórica                              |
