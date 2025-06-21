@@ -12,6 +12,7 @@
 #include "../TrendAnalyzerConfig.mqh"
 #include "../Core/CoreUtils.mqh"
 #include "../Core/TrendAnalyzer.mqh"
+#include <Object.mqh>
 
 //+------------------------------------------------------------------+
 //| Classe de Análise Multi-Timeframe                               |

@@ -14,6 +14,7 @@
 #include "../TimeframeAnalysis/MultiTimeframe.mqh"
 #include "../TimeframeAnalysis/TimeframeSequencer.mqh"
 #include "ConfluenceAnalyzer.mqh"
+#include <Object.mqh>
 
 //+------------------------------------------------------------------+
 //| Classe Geradora de Sinais                                       |

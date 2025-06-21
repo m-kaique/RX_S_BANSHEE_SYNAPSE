@@ -12,6 +12,7 @@
 #include "../TrendAnalyzerEnums.mqh"
 #include "../TrendAnalyzerConfig.mqh"
 #include "../Core/CoreUtils.mqh"
+#include <Object.mqh>
 
 //+------------------------------------------------------------------+
 //| Classe Executora de Trades                                      |

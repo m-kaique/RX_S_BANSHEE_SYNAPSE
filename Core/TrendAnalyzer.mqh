@@ -10,6 +10,7 @@
 
 #include "../TrendAnalyzerEnums.mqh"
 #include "../TrendAnalyzerConfig.mqh"
+#include <Object.mqh>
 
 //+------------------------------------------------------------------+
 //| Classe Principal de Análise de Tendência                        |

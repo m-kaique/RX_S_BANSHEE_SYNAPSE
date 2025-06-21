@@ -19,6 +19,7 @@
 #include "../Indicators/BollingerBands.mqh"
 #include "../Indicators/Fibonacci.mqh"
 #include "../Indicators/VolumeAnalyzer.mqh"
+#include <Object.mqh>
 
 //+------------------------------------------------------------------+
 //| Classe Analisadora de Confluência                               |
