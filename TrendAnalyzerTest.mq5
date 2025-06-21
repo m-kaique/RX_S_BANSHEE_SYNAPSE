@@ -208,7 +208,6 @@ bool TestPriceActionModule()
         Print("TrendLines: FALHA na inicialização");
         allPassed = false;
     }
-    delete trendLines;
     
     // Testar SupportResistance
     Print("Testando SupportResistance...");
@@ -216,8 +215,8 @@ bool TestPriceActionModule()
     
     if(supRes.Initialize(TestSymbol))
     {
-        double levels[];
-        int levelCount = supRes.GetSupportLevels(levels);
+        supRes.IdentifyLevels(TestSymbol, PERIOD_H1);
+        int levelCount = supRes.GetLevelsCount();
         Print("SupportResistance: OK - Níveis encontrados: ", levelCount);
     }
     else
@@ -230,8 +229,8 @@ bool TestPriceActionModule()
     // Testar Channels
     Print("Testando Channels...");
     CChannels* channels = new CChannels();
-    
-    if(channels.Initialize(TestSymbol))
+
+    if(channels.Initialize(TestSymbol, trendLines))
     {
         double currentPrice = SymbolInfoDouble(TestSymbol, SYMBOL_BID);
         bool inChannel = channels.IsInChannel(currentPrice);
@@ -243,6 +242,7 @@ bool TestPriceActionModule()
         allPassed = false;
     }
     delete channels;
+    delete trendLines;
     
     if(allPassed)
     {
