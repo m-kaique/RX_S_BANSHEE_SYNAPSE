@@ -261,6 +261,26 @@ struct FibonacciData
 };
 
 //+------------------------------------------------------------------+
+//| Estrutura de Níveis de Fibonacci                                 |
+//+------------------------------------------------------------------+
+struct FibonacciLevels
+{
+   double   level0;         // Nível 0%
+   double   level236;       // Nível 23.6%
+   double   level382;       // Nível 38.2%
+   double   level500;       // Nível 50%
+   double   level618;       // Nível 61.8%
+   double   level786;       // Nível 78.6%
+   double   level1000;      // Nível 100%/200%
+   double   swingHigh;      // Preço do swing high
+   double   swingLow;       // Preço do swing low
+   datetime swingHighTime;  // Tempo do swing high
+   datetime swingLowTime;   // Tempo do swing low
+   bool     isValid;        // Níveis válidos
+   bool     isRetracement;  // Tipo de cálculo (retração ou extensão)
+};
+
+//+------------------------------------------------------------------+
 //| Estrutura de Dados de Volume                                    |
 //+------------------------------------------------------------------+
 struct VolumeData
