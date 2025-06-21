@@ -127,6 +127,7 @@
 #define HISTORY_BARS_TRENDLINE  100      // Barras para linha de tendência
 #define HISTORY_BARS_SR         200      // Barras para suporte/resistência
 #define HISTORY_BARS_PATTERN    50       // Barras para padrões
+#define HISTORY_BARS_FIBONACCI  200      // Barras para análise de Fibonacci
 
 //+------------------------------------------------------------------+
 //| Limites de armazenamento                                         |
