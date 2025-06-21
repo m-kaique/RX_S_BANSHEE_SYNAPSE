@@ -515,7 +515,8 @@ private:
         }
         
         double currentPrice = SymbolInfoDouble(m_symbol, SYMBOL_BID);
-        double positionType = PositionGetInteger(POSITION_TYPE);
+        ENUM_POSITION_TYPE positionType =
+            (ENUM_POSITION_TYPE)PositionGetInteger(POSITION_TYPE);
         double openPrice = PositionGetDouble(POSITION_PRICE_OPEN);
         double currentSL = PositionGetDouble(POSITION_SL);
         
@@ -569,7 +570,8 @@ private:
         double openPrice = PositionGetDouble(POSITION_PRICE_OPEN);
         double currentPrice = SymbolInfoDouble(m_symbol, SYMBOL_BID);
         double takeProfit = PositionGetDouble(POSITION_TP);
-        double positionType = PositionGetInteger(POSITION_TYPE);
+        ENUM_POSITION_TYPE positionType =
+            (ENUM_POSITION_TYPE)PositionGetInteger(POSITION_TYPE);
         
         bool shouldPartialClose = false;
         
