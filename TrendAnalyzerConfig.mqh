@@ -132,5 +132,34 @@
 #define UPDATE_FREQUENCY_MS     1000     // Frequência de atualização (ms)
 #define CACHE_VALIDITY_SECONDS  60       // Validade do cache (segundos)
 
+// --- Parâmetros adicionais ---
+#define VOLUME_ANALYSIS_PERIOD   50       // Barras para análise de volume
+#define HIGH_VOLUME_THRESHOLD    1.5      // Volume alto = 1.5x média
+#define LOW_VOLUME_THRESHOLD     0.7      // Volume baixo = 0.7x média
+#define VOLUME_CLIMAX_MULTIPLIER 3.0      // Multiplicador para climax de volume
+
+#define WEIGHT_TRENDLINE          10
+#define WEIGHT_SUPPORT_RESISTANCE 8
+#define WEIGHT_CHANNEL            6
+#define WEIGHT_MOVING_AVERAGES    7
+#define WEIGHT_VWAP               6
+#define WEIGHT_BOLLINGER          5
+#define WEIGHT_FIBONACCI          6
+#define WEIGHT_VOLUME             5
+
+#define MAX_CONFLUENCE_FACTORS    20
+#define MAX_SIGNAL_HISTORY        50
+#define SIGNAL_MIN_INTERVAL       300     // segundos
+#define STOP_LOSS_ATR_MULTIPLIER  1.5
+#define MIN_SIGNAL_STRENGTH       50.0
+#define MIN_CONFLUENCE_SCORE      60.0
+#define MIN_H4_TREND_STRENGTH     60.0
+#define MIN_H1_TREND_STRENGTH     50.0
+#define MIN_M15_TREND_STRENGTH    60.0
+#define MIN_SEQUENCE_STRENGTH     50.0
+
+#define TOLERANCE_MA              TOLERANCE_MA_NEAR
+#define TOLERANCE_SUPPORT_RESISTANCE TOLERANCE_SR_LEVEL
+
 #endif // TREND_ANALYZER_CONFIG_H
 

@@ -240,9 +240,9 @@ private:
     void AnalyzeTrendLinesConfluence(double currentPrice)
     {
         // Analisar LTA (Linha de Tendência de Alta)
-        if(m_trendLines.HasValidLTA())
+        if(m_trendLines.IsLTAValid())
         {
-            double ltaLevel = m_trendLines.GetCurrentLTALevel();
+            double ltaLevel = m_trendLines.GetCurrentLTALevel(TimeCurrent());
             bool nearLTA = m_trendLines.IsPriceNearLTA(currentPrice, TOLERANCE_TRENDLINE);
             
             if(nearLTA)
@@ -261,9 +261,9 @@ private:
         }
         
         // Analisar LTB (Linha de Tendência de Baixa)
-        if(m_trendLines.HasValidLTB())
+        if(m_trendLines.IsLTBValid())
         {
-            double ltbLevel = m_trendLines.GetCurrentLTBLevel();
+            double ltbLevel = m_trendLines.GetCurrentLTBLevel(TimeCurrent());
             bool nearLTB = m_trendLines.IsPriceNearLTB(currentPrice, TOLERANCE_TRENDLINE);
             
             if(nearLTB)
@@ -287,41 +287,23 @@ private:
     //+------------------------------------------------------------------+
     void AnalyzeSupportResistanceConfluence(double currentPrice)
     {
-        // Obter níveis próximos
-        double supportLevels[], resistanceLevels[];
-        int supportCount = m_supRes.GetNearbySupports(currentPrice, TOLERANCE_SUPPORT_RESISTANCE, supportLevels);
-        int resistanceCount = m_supRes.GetNearbyResistances(currentPrice, TOLERANCE_SUPPORT_RESISTANCE, resistanceLevels);
-        
-        // Analisar suportes
-        for(int i = 0; i < supportCount; i++)
+        // Verificar suporte e resistência mais próximos
+        double nearestSupport = m_supRes.GetNearestSupport(currentPrice);
+        if(nearestSupport > 0 &&
+           m_supRes.IsPriceNearSupport(currentPrice, TOLERANCE_SUPPORT_RESISTANCE))
         {
-            double distance = MathAbs(currentPrice - supportLevels[i]);
-            double weight = WEIGHT_SUPPORT_RESISTANCE;
-            
-            // Peso maior para níveis mais próximos
-            if(distance < TOLERANCE_SUPPORT_RESISTANCE * 0.5)
-            {
-                weight *= 1.5;
-            }
-            
-            AddConfluenceFactor("Suporte", CONFLUENCE_BULLISH, weight, 
-                              "Suporte em " + DoubleToString(supportLevels[i], 2));
+            AddConfluenceFactor("Suporte", CONFLUENCE_BULLISH,
+                              WEIGHT_SUPPORT_RESISTANCE,
+                              "Suporte em " + DoubleToString(nearestSupport, 2));
         }
-        
-        // Analisar resistências
-        for(int i = 0; i < resistanceCount; i++)
+
+        double nearestResistance = m_supRes.GetNearestResistance(currentPrice);
+        if(nearestResistance > 0 &&
+           m_supRes.IsPriceNearResistance(currentPrice, TOLERANCE_SUPPORT_RESISTANCE))
         {
-            double distance = MathAbs(currentPrice - resistanceLevels[i]);
-            double weight = WEIGHT_SUPPORT_RESISTANCE;
-            
-            // Peso maior para níveis mais próximos
-            if(distance < TOLERANCE_SUPPORT_RESISTANCE * 0.5)
-            {
-                weight *= 1.5;
-            }
-            
-            AddConfluenceFactor("Resistência", CONFLUENCE_BEARISH, weight, 
-                              "Resistência em " + DoubleToString(resistanceLevels[i], 2));
+            AddConfluenceFactor("Resistência", CONFLUENCE_BEARISH,
+                              WEIGHT_SUPPORT_RESISTANCE,
+                              "Resistência em " + DoubleToString(nearestResistance, 2));
         }
     }
     
@@ -330,11 +312,11 @@ private:
     //+------------------------------------------------------------------+
     void AnalyzeChannelsConfluence(double currentPrice)
     {
-        // Verificar se está em canal
-        if(m_channels.IsInChannel(currentPrice))
+        // Verificar se canal atual é válido
+        if(m_channels.IsChannelValid())
         {
             ENUM_CHANNEL_TYPE channelType = m_channels.GetChannelType();
-            ENUM_CHANNEL_POSITION position = m_channels.GetPricePositionInChannel(currentPrice);
+            ENUM_CHANNEL_POSITION position = m_channels.GetPricePosition(currentPrice);
             
             string channelName = "";
             switch(channelType)
