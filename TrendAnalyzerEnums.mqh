@@ -111,6 +111,45 @@ enum ENUM_FIBO_SIGNAL
 };
 
 //+------------------------------------------------------------------+
+//| Tipos de Confluência de Fatores                                  |
+//+------------------------------------------------------------------+
+enum ENUM_CONFLUENCE_TYPE
+{
+   CONFLUENCE_BULLISH,   // Indica fator de compra
+   CONFLUENCE_BEARISH,   // Indica fator de venda
+   CONFLUENCE_NEUTRAL    // Indeterminado/neutro
+};
+
+//+------------------------------------------------------------------+
+//| Estrutura de Fator de Confluência                                |
+//+------------------------------------------------------------------+
+struct ConfluenceFactor
+{
+   string              name;        // Nome do fator
+   ENUM_CONFLUENCE_TYPE type;       // Tipo do fator
+   double              weight;      // Peso atribuído
+   string              description; // Descrição detalhada
+   bool                isValid;     // Se o fator é válido
+};
+
+//+------------------------------------------------------------------+
+//| Estrutura de Resultado de Confluência                            |
+//+------------------------------------------------------------------+
+struct ConfluenceResult
+{
+   string  symbol;           // Símbolo analisado
+   datetime timestamp;       // Momento da análise
+   double  confluenceScore;  // Score geral (0-100)
+   int     bullishFactors;   // Quantidade de fatores bullish
+   int     bearishFactors;   // Quantidade de fatores bearish
+   int     neutralFactors;   // Quantidade de fatores neutros
+   int     totalFactors;     // Total de fatores considerados
+   string  strongestFactor;  // Fator mais forte
+   string  weakestFactor;    // Fator mais fraco
+   bool    isValid;          // Resultado válido
+};
+
+//+------------------------------------------------------------------+
 //| Estrutura de Linha de Tendência                                 |
 //+------------------------------------------------------------------+
 struct TrendLine
@@ -190,6 +229,26 @@ struct FibonacciData
    datetime highTime;       // Tempo da máxima
    datetime lowTime;        // Tempo da mínima
    bool     isValid;        // Se os dados são válidos
+};
+
+//+------------------------------------------------------------------+
+//| Estrutura detalhada de Níveis de Fibonacci                       |
+//+------------------------------------------------------------------+
+struct FibonacciLevels
+{
+   double   level0;       // Nível 0%
+   double   level236;     // 23.6%
+   double   level382;     // 38.2%
+   double   level500;     // 50%
+   double   level618;     // 61.8%
+   double   level786;     // 78.6%
+   double   level1000;    // 100%
+   double   swingHigh;    // Ponto de swing high
+   double   swingLow;     // Ponto de swing low
+   datetime swingHighTime;// Tempo do swing high
+   datetime swingLowTime; // Tempo do swing low
+   bool     isValid;      // Níveis válidos
+   bool     isRetracement;// Se foi cálculo de retração
 };
 
 //+------------------------------------------------------------------+
