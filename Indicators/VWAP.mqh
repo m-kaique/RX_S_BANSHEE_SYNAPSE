@@ -7,6 +7,7 @@
 
 #ifndef VWAP_H
 #define VWAP_H
+#property strict
 
 #include <Object.mqh>
 #include "../TrendAnalyzerEnums.mqh"

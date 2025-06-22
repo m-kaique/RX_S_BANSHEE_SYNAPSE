@@ -7,6 +7,7 @@
 
 #ifndef CONFLUENCE_ANALYZER_H
 #define CONFLUENCE_ANALYZER_H
+#property strict
 
 #include <Object.mqh>
 #include "../TrendAnalyzerEnums.mqh"

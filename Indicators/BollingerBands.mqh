@@ -7,6 +7,7 @@
 
 #ifndef BOLLINGER_BANDS_H
 #define BOLLINGER_BANDS_H
+#property strict
 
 #include <Object.mqh>
 #include "../TrendAnalyzerEnums.mqh"

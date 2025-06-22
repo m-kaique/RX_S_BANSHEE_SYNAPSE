@@ -7,6 +7,7 @@
 
 #ifndef TREND_ANALYZER_CONFIG_H
 #define TREND_ANALYZER_CONFIG_H
+#property strict
 
 //+------------------------------------------------------------------+
 //| Configurações de Timeframes                                     |

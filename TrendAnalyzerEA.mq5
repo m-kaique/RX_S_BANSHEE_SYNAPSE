@@ -10,6 +10,7 @@
 #property copyright "Manus AI"
 #property version   "1.0"
 #property description "Expert Advisor para análise de tendência WINM25"
+#property strict
 
 // Incluir todos os módulos necessários
 #include "TrendAnalyzerEnums.mqh"

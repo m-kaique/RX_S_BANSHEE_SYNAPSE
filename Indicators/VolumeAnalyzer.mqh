@@ -7,6 +7,7 @@
 
 #ifndef VOLUME_ANALYZER_H
 #define VOLUME_ANALYZER_H
+#property strict
 
 #include <Object.mqh>
 #include "../TrendAnalyzerEnums.mqh"

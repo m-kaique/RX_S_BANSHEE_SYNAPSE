@@ -7,6 +7,7 @@
 
 #ifndef FIBONACCI_H
 #define FIBONACCI_H
+#property strict
 
 #include <Object.mqh>
 #include "../TrendAnalyzerEnums.mqh"

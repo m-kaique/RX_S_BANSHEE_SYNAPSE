@@ -7,6 +7,7 @@
 
 #ifndef CHANNELS_H
 #define CHANNELS_H
+#property strict
 
 #include <Object.mqh>
 #include "../TrendAnalyzerEnums.mqh"

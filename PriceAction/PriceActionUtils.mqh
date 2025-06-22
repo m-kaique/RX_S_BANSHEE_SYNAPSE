@@ -7,6 +7,7 @@
 
 #ifndef PRICE_ACTION_UTILS_H
 #define PRICE_ACTION_UTILS_H
+#property strict
 
 #include "../TrendAnalyzerEnums.mqh"
 #include "../TrendAnalyzerConfig.mqh"

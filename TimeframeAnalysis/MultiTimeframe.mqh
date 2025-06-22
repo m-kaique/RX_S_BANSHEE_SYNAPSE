@@ -7,6 +7,7 @@
 
 #ifndef MULTI_TIMEFRAME_H
 #define MULTI_TIMEFRAME_H
+#property strict
 
 #include <Object.mqh>
 #include "../TrendAnalyzerEnums.mqh"
