@@ -89,6 +89,7 @@ CTradeExecutor*      g_tradeExecutor = NULL;          // Executor de trades
 // Estado do EA
 bool                 g_initialized = false;           // Status de inicialização
 bool                 g_waitForHistory = false;        // Aguardando histórico
+bool                 g_runtimeDisabled = false;       // EA desabilitado em tempo de execução
 datetime             g_lastSignalCheck = 0;           // Última verificação de sinal
 datetime             g_lastUpdate = 0;                // Última atualização
 datetime             g_sessionStart = 0;              // Início da sessão
@@ -114,6 +115,9 @@ double               g_totalLoss = 0;                 // Perda total
 int OnInit()
 {
     Print("=== INICIANDO TREND ANALYZER EA v1.0 ===");
+
+    // Garantir que o EA não esteja desabilitado de execuções anteriores
+    g_runtimeDisabled = false;
     
     // Validar parâmetros
     if(!ValidateParameters())
@@ -225,8 +229,8 @@ void OnDeinit(const int reason)
 //+------------------------------------------------------------------+
 void OnTick()
 {
-    // Verificar se EA está habilitado
-    if(!EA_Enabled)
+    // Verificar se EA está habilitado ou se foi desabilitado por erro crítico
+    if(!EA_Enabled || g_runtimeDisabled)
     {
         return;
     }
@@ -255,7 +259,7 @@ void OnTick()
             else
             {
                 Print("ERRO CRÍTICO: Máximo de tentativas de reinicialização excedido. EA desabilitado.");
-                EA_Enabled = false;
+                g_runtimeDisabled = true;
                 return;
             }
         }

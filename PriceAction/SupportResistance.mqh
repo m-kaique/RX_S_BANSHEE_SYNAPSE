@@ -82,7 +82,7 @@ public:
         if(symbol != "") m_symbol = symbol;
         
         // Limpar níveis anteriores
-        ArrayFree(m_levels);
+        ArrayResize(m_levels, 0);
         
         // Obter dados históricos
         if(!GetHistoricalData(tf, HISTORY_BARS_SR))
