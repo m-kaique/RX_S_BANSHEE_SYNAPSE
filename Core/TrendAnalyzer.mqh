@@ -12,6 +12,7 @@
 #include <Object.mqh>
 #include "../TrendAnalyzerEnums.mqh"
 #include "../TrendAnalyzerConfig.mqh"
+#include "CoreUtils.mqh"
 
 //+------------------------------------------------------------------+
 //| Classe Principal de Análise de Tendência                        |
@@ -292,10 +293,11 @@ public:
         double stdDev = 0;
         if(bars >= 2)
         {
-            double timeDiff = (double)(m_time[0] - m_time[bars-1]);
-            double slope = 0.0;
-            if(timeDiff != 0.0)
-                slope = (m_close[0] - m_close[bars-1]) / timeDiff;
+            // Utilize o método utilitário para calcular a inclinação
+            double slope = CCoreUtils::CalculateSlope(m_time[bars-1],
+                                                     m_close[bars-1],
+                                                     m_time[0],
+                                                     m_close[0]);
             double intercept = m_close[0] - slope * (double)m_time[0];
             double sumSq = 0;
             for(int i=0;i<bars;i++)

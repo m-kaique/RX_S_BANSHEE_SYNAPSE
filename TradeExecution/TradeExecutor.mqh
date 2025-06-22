@@ -14,6 +14,7 @@
 #include "../TrendAnalyzerEnums.mqh"
 #include "../TrendAnalyzerConfig.mqh"
 #include "../Core/CoreUtils.mqh"
+#include "TradeUtils.mqh"
 
 extern int    g_winningTrades;
 extern int    g_losingTrades;
@@ -212,7 +213,7 @@ public:
         else
         {
             int ret = m_trade.ResultRetcode();
-            string msg = TradeResultRetcodeDescription(ret);
+            string msg = CTradeUtils::TradeResultRetcodeDescription(ret);
             CCoreUtils::LogError("Falha ao abrir posição de compra - Retcode: " + IntegerToString(ret) + " - " + msg);
         }
         
@@ -273,7 +274,7 @@ public:
         else
         {
             int ret = m_trade.ResultRetcode();
-            string msg = TradeResultRetcodeDescription(ret);
+            string msg = CTradeUtils::TradeResultRetcodeDescription(ret);
             CCoreUtils::LogError("Falha ao abrir posição de venda - Retcode: " + IntegerToString(ret) + " - " + msg);
         }
         
