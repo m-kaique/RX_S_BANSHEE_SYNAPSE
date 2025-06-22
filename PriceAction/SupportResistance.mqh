@@ -13,8 +13,7 @@
 #include "../TrendAnalyzerEnums.mqh"
 #include "../TrendAnalyzerConfig.mqh"
 #include "../Core/CoreUtils.mqh"
-
-class CValidationVisualizer;
+#include "../Visualization/IValidationVisualizer.mqh"
 
 //+------------------------------------------------------------------+
 //| Classe de Suporte e Resistência                                 |
@@ -24,7 +23,7 @@ class CSupportResistance : public CObject
 private:
     SR_Level             m_levels[];         // Níveis identificados
     string               m_symbol;           // Símbolo
-    CValidationVisualizer* m_visualizer;    // Visualizador opcional
+    IValidationVisualizer* m_visualizer;    // Visualizador opcional
     
     // Arrays para análise
     double               m_high[];           // Máximas
@@ -78,7 +77,7 @@ public:
         return true;
     }
 
-    void SetVisualizer(CValidationVisualizer* visualizer)
+    void SetVisualizer(IValidationVisualizer* visualizer)
     {
         m_visualizer = visualizer;
     }

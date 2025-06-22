@@ -11,13 +11,14 @@
 
 #include <Object.mqh>
 #include "../TrendAnalyzerEnums.mqh"
+#include "IValidationVisualizer.mqh"
 #include "../PriceAction/TrendLines.mqh"
 #include "../PriceAction/SupportResistance.mqh"
 
 //+------------------------------------------------------------------+
 //| Classe para visualização de validações                           |
 //+------------------------------------------------------------------+
-class CValidationVisualizer : public CObject
+class CValidationVisualizer : public IValidationVisualizer
 {
 private:
     string m_symbol;        // Símbolo

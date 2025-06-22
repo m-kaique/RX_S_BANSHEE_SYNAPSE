@@ -13,8 +13,7 @@
 #include "../TrendAnalyzerEnums.mqh"
 #include "../TrendAnalyzerConfig.mqh"
 #include "../Core/CoreUtils.mqh"
-
-class CValidationVisualizer;
+#include "../Visualization/IValidationVisualizer.mqh"
 
 //+------------------------------------------------------------------+
 //| Classe de Linhas de Tendência                                   |
@@ -25,7 +24,7 @@ private:
     TrendLine            m_lta;              // Linha de Tendência de Alta
     TrendLine            m_ltb;              // Linha de Tendência de Baixa
     string               m_symbol;           // Símbolo
-    CValidationVisualizer* m_visualizer;    // Visualizador opcional
+    IValidationVisualizer* m_visualizer;    // Visualizador opcional
     
     // Arrays para análise
     double               m_high[];           // Máximas
@@ -89,7 +88,7 @@ public:
         return true;
     }
 
-    void SetVisualizer(CValidationVisualizer* visualizer)
+    void SetVisualizer(IValidationVisualizer* visualizer)
     {
         m_visualizer = visualizer;
     }
