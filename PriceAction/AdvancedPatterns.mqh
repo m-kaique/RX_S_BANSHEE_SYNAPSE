@@ -400,9 +400,9 @@ private:
             return false;
         }
         
-        return CCoreUtils::ValidateArrayData(m_high, bars) &&
-               CCoreUtils::ValidateArrayData(m_low, bars) &&
-               CCoreUtils::ValidateArrayData(m_close, bars);
+        return CCoreUtils::ValidateArrayData(m_high, ArraySize(m_high)) &&
+               CCoreUtils::ValidateArrayData(m_low, ArraySize(m_low)) &&
+               CCoreUtils::ValidateArrayData(m_close, ArraySize(m_close));
     }
     
     //+------------------------------------------------------------------+

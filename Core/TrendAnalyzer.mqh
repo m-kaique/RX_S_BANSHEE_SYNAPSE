@@ -12,7 +12,8 @@
 #include <Object.mqh>
 #include "../TrendAnalyzerEnums.mqh"
 #include "../TrendAnalyzerConfig.mqh"
-#include "CoreUtils.mqh"
+// Forward declaration para evitar include circular
+class CCoreUtils;
 
 //+------------------------------------------------------------------+
 //| Classe Principal de Análise de Tendência                        |

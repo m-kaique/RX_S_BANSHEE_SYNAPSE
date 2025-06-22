@@ -50,7 +50,7 @@ public:
     //+------------------------------------------------------------------+
     ~CSupportResistance()
     {
-        ArrayFree(m_levels);
+        ArrayResize(m_levels, 0);
         ArrayFree(m_high);
         ArrayFree(m_low);
         ArrayFree(m_close);
@@ -82,7 +82,7 @@ public:
         if(symbol != "") m_symbol = symbol;
         
         // Limpar níveis anteriores
-        ArrayFree(m_levels);
+        ArrayResize(m_levels, 0);
         
         // Obter dados históricos
         if(!GetHistoricalData(tf, HISTORY_BARS_SR))
