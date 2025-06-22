@@ -29,6 +29,7 @@ private:
     double               m_low[];            // Mínimas
     double               m_close[];          // Fechamentos
     datetime             m_time[];           // Tempos
+    long                 m_volume[];         // Volume
     
     // Cache de resultados
     ENUM_TREND_DIRECTION m_lastTrendH4;      // Última tendência H4
@@ -64,6 +65,7 @@ public:
         ArraySetAsSeries(m_low, true);
         ArraySetAsSeries(m_close, true);
         ArraySetAsSeries(m_time, true);
+        ArraySetAsSeries(m_volume, true);
     }
     
     //+------------------------------------------------------------------+
@@ -75,6 +77,7 @@ public:
         ArrayFree(m_low);
         ArrayFree(m_close);
         ArrayFree(m_time);
+        ArrayFree(m_volume);
     }
     
     //+------------------------------------------------------------------+
@@ -269,45 +272,84 @@ public:
         if(!GetHistoricalData(tf, 50))
             return 0;
 
-        double strength = 0;
-        int consecutiveBars = 0;
+        int bars = MathMin(50, ArraySize(m_close));
 
-        // Contar barras consecutivas na direção da tendência
-        for(int i = 1; i < MathMin(20, ArraySize(m_close)); i++)
+        // -------------------------------------------------------------
+        // 1) Inclinação da linha de tendência
+        // -------------------------------------------------------------
+        double slopePoints = 0;
+        if(bars >= 2)
         {
-            bool bullishBar = (m_close[i] > m_close[i-1]);
-            bool bearishBar = (m_close[i] < m_close[i-1]);
+            double priceDiff = m_close[0] - m_close[bars-1];
+            slopePoints = CCoreUtils::PriceToPoints(MathAbs(priceDiff), m_symbol) / bars;
+        }
+        double slopeScore = MathMin(100.0, slopePoints * 2.0); // 50 pts/bar -> 100
 
-            if((currentTrend == TREND_UP && bullishBar) ||
-               (currentTrend == TREND_DOWN && bearishBar))
+        // -------------------------------------------------------------
+        // 2) Consistência (desvio padrão da regressão linear)
+        // -------------------------------------------------------------
+        double stdDev = 0;
+        if(bars >= 2)
+        {
+            double slope = CCoreUtils::CalculateSlope(m_time[bars-1], m_close[bars-1],
+                                                    m_time[0], m_close[0]);
+            double intercept = m_close[0] - slope * (double)m_time[0];
+            double sumSq = 0;
+            for(int i=0;i<bars;i++)
             {
-                consecutiveBars++;
+                double predicted = intercept + slope * (double)m_time[i];
+                double diff = m_close[i] - predicted;
+                sumSq += diff * diff;
+            }
+            stdDev = MathSqrt(sumSq / bars);
+        }
+        double stdPoints = CCoreUtils::PriceToPoints(stdDev, m_symbol);
+        double consistencyScore = MathMax(0.0, 100.0 - (stdPoints * 2.0));
+
+        // -------------------------------------------------------------
+        // 3) Volume médio durante formação
+        // -------------------------------------------------------------
+        double volumeScore = 50.0; // valor padrão caso não haja dados
+        if(ArraySize(m_volume) >= 21)
+        {
+            long totalVol = 0;
+            for(int i=1;i<21;i++)
+                totalVol += m_volume[i];
+            double avgVol = (double)totalVol / 20.0;
+            double ratio = (avgVol>0) ? ((double)m_volume[0] / avgVol) : 1.0;
+            volumeScore = MathMin(100.0, ratio * 50.0);
+        }
+
+        // -------------------------------------------------------------
+        // 4) Duração (barras consecutivas na direção atual)
+        // -------------------------------------------------------------
+        int duration = 0;
+        for(int i=1;i<bars;i++)
+        {
+            bool bullish = (m_close[i] > m_close[i-1]);
+            bool bearish = (m_close[i] < m_close[i-1]);
+
+            if((currentTrend == TREND_UP && bullish) ||
+               (currentTrend == TREND_DOWN && bearish))
+            {
+                duration++;
             }
             else
             {
                 break;
             }
         }
+        double durationScore = MathMin(100.0, ((double)duration / 10.0) * 100.0);
 
-        // Calcular força baseada em barras consecutivas e amplitude
-        strength = MathMin(100, consecutiveBars * 5); // Máximo 100%
+        // -------------------------------------------------------------
+        // Composição final (pesos: 40%, 20%, 20%, 20%)
+        // -------------------------------------------------------------
+        double strength = (slopeScore * 0.4) +
+                          (consistencyScore * 0.2) +
+                          (volumeScore * 0.2) +
+                          (durationScore * 0.2);
 
-        // Ajustar baseado na amplitude do movimento
-        if(ArraySize(m_close) >= 20)
-        {
-            double highestHigh = m_high[ArrayMaximum(m_high, 0, 20)];
-            double lowestLow = m_low[ArrayMinimum(m_low, 0, 20)];
-            double range = highestHigh - lowestLow;
-            double currentRange = MathAbs(m_close[0] - m_close[19]);
-
-            if(range > 0)
-            {
-                double rangeRatio = currentRange / range;
-                strength *= rangeRatio;
-            }
-        }
-
-        return MathMin(100, MathMax(0, strength));
+        return MathMin(100.0, MathMax(0.0, strength));
     }
 
     //+------------------------------------------------------------------+
@@ -364,7 +406,8 @@ private:
         if(ArrayResize(m_high, bars) < 0 || 
            ArrayResize(m_low, bars) < 0 ||
            ArrayResize(m_close, bars) < 0 ||
-           ArrayResize(m_time, bars) < 0)
+           ArrayResize(m_time, bars) < 0 ||
+           ArrayResize(m_volume, bars) < 0)
         {
             return false;
         }
@@ -373,7 +416,8 @@ private:
         if(CopyHigh(m_symbol, tf, 0, bars, m_high) < 0 ||
            CopyLow(m_symbol, tf, 0, bars, m_low) < 0 ||
            CopyClose(m_symbol, tf, 0, bars, m_close) < 0 ||
-           CopyTime(m_symbol, tf, 0, bars, m_time) < 0)
+           CopyTime(m_symbol, tf, 0, bars, m_time) < 0 ||
+           CopyTickVolume(m_symbol, tf, 0, bars, m_volume) < 0)
         {
             return false;
         }
