@@ -113,7 +113,7 @@ public:
 
         CCoreUtils::LogInfo("Identificados " + IntegerToString(ArraySize(m_levels)) + " níveis S/R");
         if(m_visualizer != NULL)
-            m_visualizer.UpdateSupportResistance(*this);
+            m_visualizer.UpdateSupportResistance(this);
     }
     
     //+------------------------------------------------------------------+

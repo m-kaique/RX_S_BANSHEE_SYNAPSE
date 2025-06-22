@@ -20,8 +20,11 @@ class CSupportResistance;
 class IValidationVisualizer : public CObject
 {
 public:
-    virtual void UpdateTrendLines(const CTrendLines &trendLines) = 0;
-    virtual void UpdateSupportResistance(const CSupportResistance &sr) = 0;
+    // Atualiza desenho das linhas de tendência durante a validação
+    virtual void UpdateTrendLines(const CTrendLines *trendLines) = 0;
+
+    // Atualiza desenho dos níveis de suporte e resistência
+    virtual void UpdateSupportResistance(const CSupportResistance *sr) = 0;
 };
 
 #endif // I_VALIDATION_VISUALIZER_H

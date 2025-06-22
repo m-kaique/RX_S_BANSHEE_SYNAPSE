@@ -48,9 +48,9 @@ public:
     }
 
     // Desenhar/atualizar linhas de tendência
-    void UpdateTrendLines(const CTrendLines &trendLines)
+    void UpdateTrendLines(const CTrendLines *trendLines)
     {
-        if(trendLines.IsLTAValid())
+        if(trendLines != NULL && trendLines.IsLTAValid())
         {
             TrendLine lta = trendLines.GetLTA();
             CreateOrUpdateLine(m_ltaName, lta.time1, lta.price1, lta.time2, lta.price2, clrGreen);
@@ -60,7 +60,7 @@ public:
             ObjectDelete(m_chartID, m_ltaName);
         }
 
-        if(trendLines.IsLTBValid())
+        if(trendLines != NULL && trendLines.IsLTBValid())
         {
             TrendLine ltb = trendLines.GetLTB();
             CreateOrUpdateLine(m_ltbName, ltb.time1, ltb.price1, ltb.time2, ltb.price2, clrRed);
@@ -72,9 +72,12 @@ public:
     }
 
     // Desenhar/atualizar níveis de suporte e resistência
-    void UpdateSupportResistance(const CSupportResistance &sr)
+    void UpdateSupportResistance(const CSupportResistance *sr)
     {
         RemoveSRObjects();
+
+        if(sr == NULL)
+            return;
 
         SR_Level levels[];
         sr.GetAllLevels(levels);

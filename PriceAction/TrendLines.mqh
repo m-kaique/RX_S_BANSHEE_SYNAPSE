@@ -130,7 +130,7 @@ public:
         
         CCoreUtils::LogInfo("LTA calculada com sucesso. Toques: " + IntegerToString(m_lta.touches));
         if(m_visualizer != NULL)
-            m_visualizer.UpdateTrendLines(*this);
+            m_visualizer.UpdateTrendLines(this);
         return true;
     }
     
@@ -171,7 +171,7 @@ public:
         
         CCoreUtils::LogInfo("LTB calculada com sucesso. Toques: " + IntegerToString(m_ltb.touches));
         if(m_visualizer != NULL)
-            m_visualizer.UpdateTrendLines(*this);
+            m_visualizer.UpdateTrendLines(this);
         return true;
     }
     
