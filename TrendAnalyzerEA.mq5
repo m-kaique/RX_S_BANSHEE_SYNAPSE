@@ -24,7 +24,7 @@
 
 // === CONFIGURAÇÕES GERAIS ===
 input group "=== CONFIGURAÇÕES GERAIS ==="
-input string EA_Symbol = "WINM25";                    // Símbolo para trading
+input string EA_Symbol = "WINQ25";                    // Símbolo para trading
 input bool   EA_Enabled = true;                       // Habilitar EA
 input bool   EA_AllowLong = true;                     // Permitir operações de compra
 input bool   EA_AllowShort = true;                    // Permitir operações de venda
@@ -370,7 +370,15 @@ bool InitializeComponents()
     g_tradeExecutor.SetRiskRewardRatio(TP_RiskRewardRatio);
     g_tradeExecutor.SetTrailingStop(SL_UseTrailingStop, SL_TrailingDistance);
     g_tradeExecutor.SetPartialClose(TP_UsePartialClose, TP_PartialPercent);
-    
+
+    // Verificar se todos os módulos internos foram inicializados
+    Sleep(200);
+    if(!g_signalGenerator.AreModulesInitialized() || !g_tradeExecutor.IsInitialized())
+    {
+        Print("ERRO: Módulos não foram inicializados corretamente");
+        return false;
+    }
+
     return true;
 }
 

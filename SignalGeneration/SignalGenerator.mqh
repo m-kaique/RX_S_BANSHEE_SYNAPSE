@@ -264,6 +264,24 @@ public:
     //+------------------------------------------------------------------+
     bool IsInitialized() const { return m_initialized; }
 
+    //+------------------------------------------------------------------+
+    //| Verificar se todos os módulos internos estão prontos           |
+    //+------------------------------------------------------------------+
+    bool AreModulesInitialized() const
+    {
+        if(!m_initialized)
+            return false;
+
+        if(m_multiTimeframe == NULL || !m_multiTimeframe.IsInitialized())
+            return false;
+        if(m_sequencer == NULL || !m_sequencer.IsInitialized())
+            return false;
+        if(m_confluence == NULL || !m_confluence.IsInitialized())
+            return false;
+
+        return true;
+    }
+
 private:
     //+------------------------------------------------------------------+
     //| Inicializar estrutura de sinal                                 |
