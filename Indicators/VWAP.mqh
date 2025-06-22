@@ -21,6 +21,7 @@ class CVWAP : public CObject
 {
 private:
     string               m_symbol;           // Símbolo
+    double               m_pointValue;       // Valor do ponto
     
     // Dados para cálculo
     double               m_vwapValue;        // Valor atual do VWAP
@@ -54,6 +55,7 @@ public:
     CVWAP()
     {
         m_symbol = "";
+        m_pointValue = 0.0;
         m_vwapValue = 0;
         m_vwapSD1Plus = 0;
         m_vwapSD1Minus = 0;
@@ -101,6 +103,12 @@ public:
         }
         
         m_symbol = symbol;
+        m_pointValue = SymbolInfoDouble(symbol, SYMBOL_POINT);
+        if(m_pointValue <= 0)
+        {
+            CCoreUtils::LogError("Falha ao obter valor de ponto para " + symbol);
+            return false;
+        }
         
         // Definir reset para início do dia atual
         datetime currentTime = TimeCurrent();
@@ -185,7 +193,10 @@ public:
             return 0;
         }
         
-        return CCoreUtils::PriceToPoints(currentPrice - m_vwapValue, m_symbol);
+        if(m_pointValue <= 0) return 0;
+
+        // Distância em pontos calculada diretamente
+        return (currentPrice - m_vwapValue) / m_pointValue;
     }
     
     //+------------------------------------------------------------------+

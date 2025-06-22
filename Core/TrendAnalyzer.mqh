@@ -304,7 +304,9 @@ public:
             }
             stdDev = MathSqrt(sumSq / bars);
         }
-        double stdPoints = CCoreUtils::PriceToPoints(stdDev, m_symbol);
+        // Converter desvio padrão para pontos diretamente para evitar
+        // dependência do utilitário
+        double stdPoints = (m_pointValue>0) ? (stdDev / m_pointValue) : 0.0;
         double consistencyScore = MathMax(0.0, 100.0 - (stdPoints * 2.0));
 
         // -------------------------------------------------------------
