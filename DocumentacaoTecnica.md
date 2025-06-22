@@ -125,6 +125,15 @@ O algoritmo principal identifica sequências de topos e fundos ascendentes para 
 
 A força da tendência é calculada através de uma fórmula proprietária que considera múltiplos fatores: a inclinação da linha de tendência (medida em pontos por período), a consistência dos pontos de confirmação (desvio padrão das distâncias), o volume médio durante a formação da tendência, e a duração temporal da sequência. O resultado é um score percentual que varia de 0% (ausência de tendência) a 100% (tendência perfeita).
 
+No código, a implementação segue essa filosofia combinando quatro componentes principais:
+
+1. **Inclinação** – conversão da variação de preços em pontos por barra.
+2. **Consistência** – desvio padrão dos fechamentos em relação à linha de regressão.
+3. **Volume** – razão entre o volume atual e a média das últimas 20 barras.
+4. **Duração** – quantidade de barras consecutivas na direção predominante.
+
+Cada componente gera um score normalizado (0‑100) e a força final é a média ponderada (40%, 20%, 20% e 20%, respectivamente).
+
 Para o WINM25, que apresenta características específicas de volatilidade e comportamento, os algoritmos foram calibrados considerando a amplitude típica de movimentos diários (aproximadamente 800-1200 pontos), a velocidade média de desenvolvimento de tendências (2-4 dias para tendências de curto prazo), e os padrões sazonais observados no índice Bovespa.
 
 ### 3.2 Price Action e Estrutura de Mercado
