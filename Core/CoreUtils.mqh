@@ -49,12 +49,15 @@ public:
     static double PriceToPoints(double price, string symbol = "")
     {
         if(symbol == "") symbol = Symbol();
-        
+
         double pointValue = SymbolInfoDouble(symbol, SYMBOL_POINT);
-        if(pointValue > 0)
-            return price / pointValue;
-        
-        return 0;
+        if(pointValue <= 0)
+        {
+            LogError("Divisão por zero em PriceToPoints para " + symbol);
+            return 0;
+        }
+
+        return price / pointValue;
     }
     
     //+------------------------------------------------------------------+
@@ -304,9 +307,9 @@ public:
     //+------------------------------------------------------------------+
     //| Converter enum para string                                      |
     //+------------------------------------------------------------------+
-    static string TrendDirectionToString(ENUM_TREND_DIRECTION trend)
+    static string TrendDirectionToString(ENUM_TREND_DIRECTION direction)
     {
-        switch(trend)
+        switch(direction)
         {
             case TREND_UP:      return "ALTA";
             case TREND_DOWN:    return "BAIXA";
@@ -365,24 +368,26 @@ public:
     //+------------------------------------------------------------------+
     //| Validar dados de array                                         |
     //+------------------------------------------------------------------+
-    static bool ValidateArrayData(const double &array[], int minSize = 1)
+    static bool ValidateArrayData(const double &array[], int minSize = 1, string name = "")
     {
         if(ArraySize(array) < minSize)
         {
-            LogError("Array muito pequeno. Tamanho: " + IntegerToString(ArraySize(array)) + ", Mínimo: " + IntegerToString(minSize));
+            string context = (name == "") ? "" : " (" + name + ")";
+            LogError("Array muito pequeno" + context + ". Tamanho: " + IntegerToString(ArraySize(array)) + ", Mínimo: " + IntegerToString(minSize));
             return false;
         }
-        
+
         // Verificar valores inválidos
         for(int i = 0; i < ArraySize(array); i++)
         {
             if(array[i] == EMPTY_VALUE || !MathIsValidNumber(array[i]))
             {
-                LogError("Valor inválido encontrado no array no índice: " + IntegerToString(i));
+                string context = (name == "") ? "" : " (" + name + ")";
+                LogError("Valor inválido encontrado no array" + context + " no índice: " + IntegerToString(i));
                 return false;
             }
         }
-        
+
         return true;
     }
     
@@ -427,10 +432,19 @@ public:
     //+------------------------------------------------------------------+
     //| Verifica se já existe o mínimo de barras no timeframe           |
     //+------------------------------------------------------------------+
-    static bool HasMinimumBars(string symbol, ENUM_TIMEFRAMES timeframe,
+    static bool HasMinimumBars(string symbol, ENUM_TIMEFRAMES tf,
                                int minBars)
     {
-        return (Bars(symbol, timeframe) >= minBars);
+        if(symbol == "")
+            symbol = Symbol();
+
+        int barCount = Bars(symbol, tf);
+        if(barCount < minBars)
+        {
+            LogInfo("Histórico insuficiente em " + EnumToString(tf) + ": " + IntegerToString(barCount) + "/" + IntegerToString(minBars));
+            return false;
+        }
+        return true;
     }
     
     //+------------------------------------------------------------------+
