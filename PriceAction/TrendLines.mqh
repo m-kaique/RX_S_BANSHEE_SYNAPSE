@@ -315,19 +315,21 @@ private:
     //+------------------------------------------------------------------+
     bool GetHistoricalData(ENUM_TIMEFRAMES tf, int bars)
     {
-        if(ArrayResize(m_high, bars) < 0 || 
+        if(ArrayResize(m_high, bars) < 0 ||
            ArrayResize(m_low, bars) < 0 ||
            ArrayResize(m_close, bars) < 0 ||
            ArrayResize(m_time, bars) < 0)
         {
+            CCoreUtils::LogError("Falha ao redimensionar arrays de TrendLines");
             return false;
         }
-        
+
         if(CopyHigh(m_symbol, tf, 0, bars, m_high) < 0 ||
            CopyLow(m_symbol, tf, 0, bars, m_low) < 0 ||
            CopyClose(m_symbol, tf, 0, bars, m_close) < 0 ||
            CopyTime(m_symbol, tf, 0, bars, m_time) < 0)
         {
+            CCoreUtils::LogError("Falha ao copiar dados históricos para TrendLines");
             return false;
         }
         
@@ -342,19 +344,29 @@ private:
     bool IdentifyPivotPoints(bool findHighs)
     {
         ArrayFree(m_pivots);
-        
+
         int arraySize = findHighs ? ArraySize(m_high) : ArraySize(m_low);
-        if(arraySize < 10) return false;
+        if(arraySize < 10)
+            return false;
+
+        if(ArraySize(m_high) != ArraySize(m_low) ||
+           ArraySize(m_low)  != ArraySize(m_close) ||
+           ArraySize(m_close)!= ArraySize(m_time))
+        {
+            CCoreUtils::LogError("Tamanhos inconsistentes nos arrays de TrendLines");
+            return false;
+        }
         
         // Procurar pontos de pivô
         for(int i = 3; i < arraySize - 3; i++)
         {
             bool isPivot = true;
             double currentPrice = findHighs ? m_high[i] : m_low[i];
-            
+
             // Verificar se é máximo/mínimo local
             for(int j = i - 3; j <= i + 3; j++)
             {
+                if(j < 0 || j >= arraySize) continue;
                 if(j == i) continue;
                 
                 double comparePrice = findHighs ? m_high[j] : m_low[j];
@@ -381,8 +393,12 @@ private:
             {
                 // Adicionar ponto de pivô
                 int newSize = ArraySize(m_pivots) + 1;
-                ArrayResize(m_pivots, newSize);
-                
+                if(ArrayResize(m_pivots, newSize) < 0)
+                {
+                    CCoreUtils::LogError("Falha ao redimensionar array de pivots");
+                    return false;
+                }
+
                 m_pivots[newSize-1].time = m_time[i];
                 m_pivots[newSize-1].price = currentPrice;
                 m_pivots[newSize-1].isHigh = findHighs;

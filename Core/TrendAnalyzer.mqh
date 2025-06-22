@@ -409,26 +409,87 @@ private:
     //+------------------------------------------------------------------+
     bool GetHistoricalData(ENUM_TIMEFRAMES tf, int bars)
     {
+        // Verificar símbolo disponível
+        if(!SymbolSelect(m_symbol, true))
+        {
+            CCoreUtils::LogError("Símbolo não disponível: " + m_symbol);
+            return false;
+        }
+
         // Redimensionar arrays
-        if(ArrayResize(m_high, bars) < 0 || 
+        if(ArrayResize(m_high, bars) < 0 ||
            ArrayResize(m_low, bars) < 0 ||
            ArrayResize(m_close, bars) < 0 ||
            ArrayResize(m_time, bars) < 0 ||
            ArrayResize(m_volume, bars) < 0)
         {
+            CCoreUtils::LogError("Falha ao redimensionar arrays de histórico");
             return false;
         }
-        
-        // Copiar dados
-        if(CopyHigh(m_symbol, tf, 0, bars, m_high) < 0 ||
-           CopyLow(m_symbol, tf, 0, bars, m_low) < 0 ||
-           CopyClose(m_symbol, tf, 0, bars, m_close) < 0 ||
-           CopyTime(m_symbol, tf, 0, bars, m_time) < 0 ||
-           CopyTickVolume(m_symbol, tf, 0, bars, m_volume) < 0)
+
+        // Copiar dados com validação e tentativas
+        bool success = false;
+        const int maxAttempts = 3;
+        for(int attempt = 0; attempt < maxAttempts && !success; attempt++)
         {
+            int highCopied   = CopyHigh(m_symbol, tf, 0, bars, m_high);
+            int lowCopied    = CopyLow(m_symbol, tf, 0, bars, m_low);
+            int closeCopied  = CopyClose(m_symbol, tf, 0, bars, m_close);
+            int timeCopied   = CopyTime(m_symbol, tf, 0, bars, m_time);
+            int volumeCopied = CopyTickVolume(m_symbol, tf, 0, bars, m_volume);
+
+            if(highCopied == bars && lowCopied == bars &&
+               closeCopied == bars && timeCopied == bars &&
+               volumeCopied == bars)
+            {
+                // Validar valores
+                bool valid = true;
+                for(int i = 0; i < bars && valid; i++)
+                {
+                    if(!MathIsValidNumber(m_high[i]) ||
+                       !MathIsValidNumber(m_low[i])  ||
+                       !MathIsValidNumber(m_close[i])||
+                       m_time[i] == 0               ||
+                       m_high[i] < m_low[i]         ||
+                       m_volume[i] < 0)
+                    {
+                        valid = false;
+                    }
+                }
+
+                if(valid)
+                {
+                    success = true;
+                }
+                else
+                {
+                    CCoreUtils::LogWarning("Dados inválidos detectados, tentativa " +
+                                          IntegerToString(attempt+1));
+                }
+            }
+            else
+            {
+                CCoreUtils::LogWarning("Falha ao copiar dados (tentativa " +
+                                      IntegerToString(attempt+1) +
+                                      ") High:" + IntegerToString(highCopied) +
+                                      " Low:" + IntegerToString(lowCopied) +
+                                      " Close:" + IntegerToString(closeCopied) +
+                                      " Time:" + IntegerToString(timeCopied) +
+                                      " Volume:" + IntegerToString(volumeCopied));
+            }
+
+            // Aguardar antes da próxima tentativa
+            if(!success && attempt < maxAttempts - 1)
+                Sleep(100);
+        }
+
+        if(!success)
+        {
+            CCoreUtils::LogError("Falha definitiva ao obter dados históricos para " +
+                               EnumToString(tf));
             return false;
         }
-        
+
         return true;
     }
     
