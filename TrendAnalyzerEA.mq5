@@ -466,6 +466,8 @@ bool InitializeComponents()
     
     // Configurar executor
     g_tradeExecutor.SetLotSize(Risk_LotSize);
+    // A chamada SetRiskPercent deve ser feita no TradeExecutor,
+    // garantindo que o controle de risco fique centralizado
     g_tradeExecutor.SetRiskPercent(Risk_RiskPercent);
     g_tradeExecutor.SetUseFixedLot(Risk_UseFixedLot);
     g_tradeExecutor.SetATRMultiplier(SL_ATRMultiplier);
