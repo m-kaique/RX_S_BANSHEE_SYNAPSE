@@ -444,7 +444,7 @@ private:
                                       " Low:" + IntegerToString(lowCopied) +
                                       " Close:" + IntegerToString(closeCopied) +
                                       " Time:" + IntegerToString(timeCopied));
-                RefreshRates();
+                // Aguarda um curto período para nova tentativa
                 Sleep(50);
             }
         }
