@@ -16,7 +16,6 @@
 #include "../TimeframeAnalysis/TimeframeSequencer.mqh"
 #include "ConfluenceAnalyzer.mqh"
 
-extern bool Signal_OnlyLiquidityHours;
 
 //+------------------------------------------------------------------+
 //| Classe Geradora de Sinais                                       |
