@@ -282,7 +282,7 @@ public:
         if(bars >= 2)
         {
             double priceDiff = m_close[0] - m_close[bars-1];
-            slopePoints = CCoreUtils::PriceToPoints(MathAbs(priceDiff), m_symbol) / bars;
+            slopePoints = MathAbs(priceDiff) / (m_pointValue * bars);
         }
         double slopeScore = MathMin(100.0, slopePoints * 2.0); // 50 pts/bar -> 100
 
