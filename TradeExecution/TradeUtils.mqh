@@ -9,10 +9,10 @@ class CTradeUtils
 public:
     static string TradeResultRetcodeDescription(const int retcode)
     {
-        // Defer to the platform-provided description for the error code.
-        // This avoids maintaining our own table of trade retcodes that may
-        // differ between platform versions.
-        return ErrorDescription(retcode);
+        // Convert the return code to its enumeration name. This provides a
+        // human readable message without relying on optional standard
+        // library files that may not be present in the runtime environment.
+        return EnumToString((ENUM_TRADE_RETURN_CODE)retcode);
     }
 }; 
 
