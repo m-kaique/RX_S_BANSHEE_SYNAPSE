@@ -295,5 +295,11 @@ struct VolumeData
    bool     isConfirming;   // Se o volume confirma o movimento
 };
 
+// Constantes de Timeframe para análise
+#define TIMEFRAME_MACRO    PERIOD_H4   // Timeframe macro (H4)
+#define TIMEFRAME_TREND    PERIOD_H1   // Timeframe de tendência (H1)
+#define TIMEFRAME_ENTRY    PERIOD_M15  // Timeframe de entrada (M15)
+#define TIMEFRAME_TIMING   PERIOD_M5   // Timeframe de timing (M5)
+
 #endif // TREND_ANALYZER_ENUMS_H
 

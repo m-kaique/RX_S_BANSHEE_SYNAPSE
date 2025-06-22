@@ -25,7 +25,7 @@
 
 // === CONFIGURAÇÕES GERAIS ===
 input group "=== CONFIGURAÇÕES GERAIS ==="
-input string EA_Symbol = "WINQ25";                    // Símbolo para trading
+input string EA_Symbol = "WINM25";                    // Símbolo para trading
 input bool   EA_Enabled = true;                       // Habilitar EA
 input bool   EA_AllowLong = true;                     // Permitir operações de compra
 input bool   EA_AllowShort = true;                    // Permitir operações de venda
@@ -170,7 +170,18 @@ int OnInit()
     {
         CreateInfoPanel();
     }
-    
+
+    if(g_initialized)
+    {
+        Print("=== VERIFICAÇÃO DE INTEGRIDADE INICIAL ===");
+        Print("SignalGenerator: ", (g_signalGenerator != NULL ? "OK" : "FALHOU"));
+        Print("TradeExecutor: ", (g_tradeExecutor != NULL ? "OK" : "FALHOU"));
+        Print("ComponentsValid: ", (ComponentsValid() ? "OK" : "FALHOU"));
+        Print("Símbolo configurado: ", EA_Symbol);
+        Print("Magic Number: ", EA_MagicNumber);
+        Print("==========================================");
+    }
+
     return INIT_SUCCEEDED;
 }
 
@@ -220,12 +231,45 @@ void OnTick()
         return;
     }
 
-    // Se já inicializado, verificar integridade dos componentes
+    // Variáveis de proteção contra loop de reinicialização
+    static int reinitAttempts = 0;
+    static datetime lastReinitTime = 0;
+
+    // Se já inicializado, verificar integridade dos componentes com controle
     if(g_initialized && !ComponentsValid())
     {
-        Print("ERRO: Componentes inválidos detectados. Reinicializando...");
-        CleanupComponents();
-        g_initialized = false;
+        datetime currentTime = TimeCurrent();
+
+        // Permitir apenas uma tentativa de reinicialização por minuto
+        if(currentTime - lastReinitTime >= 60)
+        {
+            reinitAttempts++;
+            lastReinitTime = currentTime;
+
+            if(reinitAttempts <= 3)
+            {
+                Print("AVISO: Componentes inválidos detectados. Tentativa de reinicialização ", reinitAttempts, "/3");
+                CleanupComponents();
+                g_initialized = false;
+            }
+            else
+            {
+                Print("ERRO CRÍTICO: Máximo de tentativas de reinicialização excedido. EA desabilitado.");
+                EA_Enabled = false;
+                return;
+            }
+        }
+        else
+        {
+            return;
+        }
+    }
+
+    // Resetar contador após estabilização
+    if(g_initialized && ComponentsValid() && reinitAttempts > 0)
+    {
+        reinitAttempts = 0;
+        Print("Componentes estabilizados. Contador de reinicialização resetado.");
     }
 
     // Tentar inicialização se não estiver aguardando histórico
@@ -433,6 +477,16 @@ bool InitializeComponents()
         return false;
     }
 
+    // Verificação final de integridade
+    if(!ComponentsValid())
+    {
+        CCoreUtils::LogError("Componentes falharam na validação final");
+        CleanupComponents();
+        return false;
+    }
+
+    // Log de sucesso
+    CCoreUtils::LogInfo("Todos os componentes inicializados e validados com sucesso");
     return true;
 }
 
@@ -666,37 +720,40 @@ void CheckForTradingSignals()
     
     if(g_signalGenerator == NULL)
     {
+        CCoreUtils::LogError("SignalGenerator não inicializado");
         return;
     }
     
     // Gerar novo sinal
-    bool signalGenerated = g_signalGenerator.GenerateSignal(EA_Symbol);
-    
-    if(!signalGenerated || !g_signalGenerator.HasValidSignal())
+    if(!g_signalGenerator.GenerateSignal(EA_Symbol))
     {
         g_signalActive = false;
         return;
     }
-    
-    // Obter sinal atual
-    TradingSignal signal = g_signalGenerator.GetCurrentSignal();
-    
-    // Validar sinal
-    if(!ValidateSignal(signal))
+
+    TradingSignal newSignal = g_signalGenerator.GetCurrentSignal();
+
+    if(!newSignal.isValid)
     {
+        CCoreUtils::LogError("Sinal inválido gerado - ignorando");
         g_signalActive = false;
         return;
     }
-    
-    // Executar trade baseado no sinal
-    ExecuteSignal(signal);
-    
-    g_currentSignal = signal;
+
+    if(newSignal.strength < Signal_MinConfluence)
+    {
+        CCoreUtils::LogWarning("Sinal com força insuficiente: " + DoubleToString(newSignal.strength, 1) + "%");
+        g_signalActive = false;
+        return;
+    }
+
+    g_currentSignal = newSignal;
+    ExecuteSignal(g_currentSignal);
     g_signalActive = true;
-    
+
     if(Debug_LogSignals)
     {
-        LogSignal(signal);
+        LogSignal(newSignal);
     }
 }
 
@@ -770,6 +827,7 @@ void ExecuteSignal(const TradingSignal &signal)
 {
     if(g_tradeExecutor == NULL)
     {
+        CCoreUtils::LogError("TradeExecutor não inicializado");
         return;
     }
     

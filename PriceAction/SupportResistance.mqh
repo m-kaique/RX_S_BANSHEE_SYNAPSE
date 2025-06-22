@@ -50,7 +50,7 @@ public:
     //+------------------------------------------------------------------+
     ~CSupportResistance()
     {
-        ArrayFree(m_levels);
+        ArrayResize(m_levels, 0);
         ArrayFree(m_high);
         ArrayFree(m_low);
         ArrayFree(m_close);

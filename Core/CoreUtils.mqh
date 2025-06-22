@@ -51,9 +51,10 @@ public:
         if(symbol == "") symbol = Symbol();
 
         double pointValue = SymbolInfoDouble(symbol, SYMBOL_POINT);
-        if(pointValue <= 0 || !MathIsValidNumber(pointValue))
+
+        if(pointValue <= 0)
         {
-            LogError("Divisão por zero em PriceToPoints para " + symbol);
+            LogError("PointValue inválido para " + symbol + ": " + DoubleToString(pointValue));
             return 0;
         }
 
