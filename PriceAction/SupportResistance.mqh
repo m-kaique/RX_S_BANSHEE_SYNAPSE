@@ -14,6 +14,8 @@
 #include "../TrendAnalyzerConfig.mqh"
 #include "../Core/CoreUtils.mqh"
 
+class CValidationVisualizer;
+
 //+------------------------------------------------------------------+
 //| Classe de Suporte e Resistência                                 |
 //+------------------------------------------------------------------+
@@ -22,6 +24,7 @@ class CSupportResistance : public CObject
 private:
     SR_Level             m_levels[];         // Níveis identificados
     string               m_symbol;           // Símbolo
+    CValidationVisualizer* m_visualizer;    // Visualizador opcional
     
     // Arrays para análise
     double               m_high[];           // Máximas
@@ -37,6 +40,7 @@ public:
     CSupportResistance()
     {
         m_symbol = "";
+        m_visualizer = NULL;
         
         ArraySetAsSeries(m_high, true);
         ArraySetAsSeries(m_low, true);
@@ -73,6 +77,11 @@ public:
         CCoreUtils::LogInfo("SupportResistance inicializado para " + symbol);
         return true;
     }
+
+    void SetVisualizer(CValidationVisualizer* visualizer)
+    {
+        m_visualizer = visualizer;
+    }
     
     //+------------------------------------------------------------------+
     //| Identificar níveis de suporte e resistência                    |
@@ -102,8 +111,10 @@ public:
         
         // Ordenar por relevância
         SortLevelsByRelevance();
-        
+
         CCoreUtils::LogInfo("Identificados " + IntegerToString(ArraySize(m_levels)) + " níveis S/R");
+        if(m_visualizer != NULL)
+            m_visualizer.UpdateSupportResistance(*this);
     }
     
     //+------------------------------------------------------------------+
