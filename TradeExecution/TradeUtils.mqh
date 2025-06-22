@@ -40,7 +40,7 @@ public:
             case TRADE_RETCODE_POSITION_CLOSED: return "Position closed";
             case TRADE_RETCODE_INVALID_CLOSE_VOLUME: return "Invalid close volume";
             case TRADE_RETCODE_CLOSE_ORDER_EXIST: return "Close order exist";
-            case TRADE_RETCODE_LIMIT_ORDER:    return "Limit order";
+            case TRADE_RETCODE_LIMIT_POSITIONS: return "Limit positions";
             case TRADE_RETCODE_REJECT_CANCEL:  return "Cancel rejected";
             case TRADE_RETCODE_LONG_ONLY:      return "Long only";
             default:
