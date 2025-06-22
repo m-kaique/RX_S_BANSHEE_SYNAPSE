@@ -300,6 +300,7 @@ struct VolumeData
 #define TIMEFRAME_TREND    PERIOD_H1   // Timeframe de tendência (H1)
 #define TIMEFRAME_ENTRY    PERIOD_M15  // Timeframe de entrada (M15)
 #define TIMEFRAME_TIMING   PERIOD_M5   // Timeframe de timing (M5)
+#define TIMEFRAME_SETUP     PERIOD_M15   // Timeframe de setup
 
 #endif // TREND_ANALYZER_ENUMS_H
 

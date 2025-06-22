@@ -1,15 +1,15 @@
 //+------------------------------------------------------------------+
 //| TrendAnalyzerEA.mq5 - Expert Advisor Principal                  |
-//| Desenvolvido por: Manus AI                                       |
-//| Versão: 1.0                                                      |
-//| Data: 2025-06-21                                                 |
-//| Descrição: EA completo para análise de tendência do WINM25      |
+//| Desenvolvido por: Manus AI                                      |
+//| Versão: 1.0                                                     |
+//| Data: 2025-06-21                                                |
+//| Descrição: EA completo para análise de tendência do WINQ25      |
 //|            baseado na metodologia do guia fornecido             |
 //+------------------------------------------------------------------+
 
 #property copyright "Manus AI"
 #property version   "1.0"
-#property description "Expert Advisor para análise de tendência WINM25"
+#property description "Expert Advisor para análise de tendência WINQ25"
 #property strict
 
 // Incluir todos os módulos necessários
@@ -25,7 +25,7 @@
 
 // === CONFIGURAÇÕES GERAIS ===
 input group "=== CONFIGURAÇÕES GERAIS ==="
-input string EA_Symbol = "WINM25";                    // Símbolo para trading
+input string EA_Symbol = "WINQ25";                    // Símbolo para trading
 input bool   EA_Enabled = true;                       // Habilitar EA
 input bool   EA_AllowLong = true;                     // Permitir operações de compra
 input bool   EA_AllowShort = true;                    // Permitir operações de venda

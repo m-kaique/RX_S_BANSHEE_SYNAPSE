@@ -10,15 +10,6 @@
 #property strict
 
 //+------------------------------------------------------------------+
-//| Configurações de Timeframes                                     |
-//+------------------------------------------------------------------+
-#define TIMEFRAME_MACRO     PERIOD_H4    // Timeframe macro (contexto estrutural)
-#define TIMEFRAME_TREND     PERIOD_H1    // Timeframe de tendência principal
-#define TIMEFRAME_SETUP     PERIOD_M15   // Timeframe de setup
-#define TIMEFRAME_ENTRY     PERIOD_M5    // Timeframe de entrada
-#define TIMEFRAME_TIMING    PERIOD_M3    // Timeframe de timing
-
-//+------------------------------------------------------------------+
 //| Configurações de Médias Móveis                                  |
 //+------------------------------------------------------------------+
 #define MA_PERIOD_9         9            // Período EMA 9

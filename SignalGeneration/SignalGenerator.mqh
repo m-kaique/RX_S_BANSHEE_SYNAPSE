@@ -353,7 +353,8 @@ private:
         }
         
         // Verificar liquidez conforme configuração
-        if(Signal_OnlyLiquidityHours && !CCoreUtils::IsLiquidityHours(currentTime))
+        // TODO: Signal_OnlyLiquidityHours from TrendAnalyzerEA
+        if(!CCoreUtils::IsLiquidityHours(currentTime))
         {
             return false;
         }

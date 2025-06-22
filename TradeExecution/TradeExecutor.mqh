@@ -212,7 +212,7 @@ public:
         }
         else
         {
-            int ret = m_trade.ResultRetcode();
+            int ret = (int)m_trade.ResultRetcode();
             string msg = CTradeUtils::TradeResultRetcodeDescription(ret);
             CCoreUtils::LogError("Falha ao abrir posição de compra - Retcode: " + IntegerToString(ret) + " - " + msg);
         }
@@ -273,7 +273,7 @@ public:
         }
         else
         {
-            int ret = m_trade.ResultRetcode();
+            int ret = (int)m_trade.ResultRetcode();
             string msg = CTradeUtils::TradeResultRetcodeDescription(ret);
             CCoreUtils::LogError("Falha ao abrir posição de venda - Retcode: " + IntegerToString(ret) + " - " + msg);
         }
