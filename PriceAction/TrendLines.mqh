@@ -331,9 +331,9 @@ private:
             return false;
         }
         
-        return CCoreUtils::ValidateArrayData(m_high, bars) &&
-               CCoreUtils::ValidateArrayData(m_low, bars) &&
-               CCoreUtils::ValidateArrayData(m_close, bars);
+        return CCoreUtils::ValidateArrayData(m_high, bars, "High") &&
+               CCoreUtils::ValidateArrayData(m_low, bars, "Low") &&
+               CCoreUtils::ValidateArrayData(m_close, bars, "Close");
     }
     
     //+------------------------------------------------------------------+
