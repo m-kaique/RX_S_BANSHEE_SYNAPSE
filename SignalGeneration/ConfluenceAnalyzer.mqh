@@ -19,6 +19,7 @@
 #include "../Indicators/BollingerBands.mqh"
 #include "../Indicators/Fibonacci.mqh"
 #include "../Indicators/VolumeAnalyzer.mqh"
+#include "../ChartObjects/ChartDrawer.mqh"
 
 //+------------------------------------------------------------------+
 //| Classe Analisadora de Confluência                               |
@@ -27,6 +28,7 @@ class CConfluenceAnalyzer : public CObject
 {
 private:
     string               m_symbol;           // Símbolo
+    CChartDrawer*        m_drawer;           // Desenhador de objetos
     
     // Componentes de análise
     CTrendLines*         m_trendLines;       // Linhas de tendência
@@ -55,7 +57,8 @@ public:
     CConfluenceAnalyzer()
     {
         m_symbol = "";
-        
+        m_drawer = NULL;
+
         m_trendLines = NULL;
         m_supRes = NULL;
         m_channels = NULL;
@@ -122,6 +125,12 @@ public:
         allInitialized &= m_bollingerBands.Initialize(symbol);
         allInitialized &= m_fibonacci.Initialize(symbol);
         allInitialized &= m_volumeAnalyzer.Initialize(symbol);
+
+        if(m_drawer != NULL)
+        {
+            m_trendLines.SetChartDrawer(m_drawer);
+            m_supRes.SetChartDrawer(m_drawer);
+        }
         
         if(!allInitialized)
         {
@@ -131,8 +140,18 @@ public:
         
         m_initialized = true;
         CCoreUtils::LogInfo("ConfluenceAnalyzer inicializado com sucesso para " + symbol);
-        
+
         return true;
+    }
+
+    //+------------------------------------------------------------------+
+    //| Definir objeto de desenho                                       |
+    //+------------------------------------------------------------------+
+    void SetChartDrawer(CChartDrawer* drawer)
+    {
+        m_drawer = drawer;
+        if(m_trendLines != NULL) m_trendLines.SetChartDrawer(drawer);
+        if(m_supRes != NULL) m_supRes.SetChartDrawer(drawer);
     }
     
     //+------------------------------------------------------------------+

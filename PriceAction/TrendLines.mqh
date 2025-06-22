@@ -11,6 +11,7 @@
 #include "../TrendAnalyzerEnums.mqh"
 #include "../TrendAnalyzerConfig.mqh"
 #include "../Core/CoreUtils.mqh"
+#include "../ChartObjects/ChartDrawer.mqh"
 
 //+------------------------------------------------------------------+
 //| Classe de Linhas de Tendência                                   |
@@ -21,6 +22,7 @@ private:
     TrendLine            m_lta;              // Linha de Tendência de Alta
     TrendLine            m_ltb;              // Linha de Tendência de Baixa
     string               m_symbol;           // Símbolo
+    CChartDrawer*        m_drawer;           // Desenhador de objetos
     
     // Arrays para análise
     double               m_high[];           // Máximas
@@ -46,6 +48,7 @@ public:
     CTrendLines()
     {
         m_symbol = "";
+        m_drawer = NULL;
         InitializeTrendLine(m_lta);
         InitializeTrendLine(m_ltb);
         
@@ -77,10 +80,18 @@ public:
             CCoreUtils::LogError("Símbolo inválido para TrendLines");
             return false;
         }
-        
+
         m_symbol = symbol;
         CCoreUtils::LogInfo("TrendLines inicializado para " + symbol);
         return true;
+    }
+
+    //+------------------------------------------------------------------+
+    //| Definir objeto para desenho                                     |
+    //+------------------------------------------------------------------+
+    void SetChartDrawer(CChartDrawer* drawer)
+    {
+        m_drawer = drawer;
     }
     
     //+------------------------------------------------------------------+
@@ -94,6 +105,7 @@ public:
         if(!GetHistoricalData(tf, HISTORY_BARS_TRENDLINE))
         {
             CCoreUtils::LogError("Falha ao obter dados para LTA");
+            if(m_drawer != NULL) m_drawer->UpdateTrendLines(*this);
             return false;
         }
         
@@ -101,6 +113,7 @@ public:
         if(!IdentifyPivotPoints(false)) // false = fundos
         {
             CCoreUtils::LogError("Falha ao identificar fundos para LTA");
+            if(m_drawer != NULL) m_drawer->UpdateTrendLines(*this);
             return false;
         }
         
@@ -108,6 +121,7 @@ public:
         if(!FindBestTrendLine(false, m_lta)) // false = linha de alta (conecta fundos)
         {
             CCoreUtils::LogWarning("Não foi possível encontrar LTA válida");
+            if(m_drawer != NULL) m_drawer->UpdateTrendLines(*this);
             return false;
         }
         
@@ -115,10 +129,12 @@ public:
         if(!ValidateTrendLine(m_lta, false))
         {
             CCoreUtils::LogWarning("LTA não passou na validação");
+            if(m_drawer != NULL) m_drawer->UpdateTrendLines(*this);
             return false;
         }
         
         CCoreUtils::LogInfo("LTA calculada com sucesso. Toques: " + IntegerToString(m_lta.touches));
+        if(m_drawer != NULL) m_drawer->UpdateTrendLines(*this);
         return true;
     }
     
@@ -133,6 +149,7 @@ public:
         if(!GetHistoricalData(tf, HISTORY_BARS_TRENDLINE))
         {
             CCoreUtils::LogError("Falha ao obter dados para LTB");
+            if(m_drawer != NULL) m_drawer->UpdateTrendLines(*this);
             return false;
         }
         
@@ -140,6 +157,7 @@ public:
         if(!IdentifyPivotPoints(true)) // true = topos
         {
             CCoreUtils::LogError("Falha ao identificar topos para LTB");
+            if(m_drawer != NULL) m_drawer->UpdateTrendLines(*this);
             return false;
         }
         
@@ -147,6 +165,7 @@ public:
         if(!FindBestTrendLine(true, m_ltb)) // true = linha de baixa (conecta topos)
         {
             CCoreUtils::LogWarning("Não foi possível encontrar LTB válida");
+            if(m_drawer != NULL) m_drawer->UpdateTrendLines(*this);
             return false;
         }
         
@@ -154,10 +173,12 @@ public:
         if(!ValidateTrendLine(m_ltb, true))
         {
             CCoreUtils::LogWarning("LTB não passou na validação");
+            if(m_drawer != NULL) m_drawer->UpdateTrendLines(*this);
             return false;
         }
         
         CCoreUtils::LogInfo("LTB calculada com sucesso. Toques: " + IntegerToString(m_ltb.touches));
+        if(m_drawer != NULL) m_drawer->UpdateTrendLines(*this);
         return true;
     }
     

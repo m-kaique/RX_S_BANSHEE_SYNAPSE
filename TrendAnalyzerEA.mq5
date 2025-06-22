@@ -17,6 +17,7 @@
 #include "Core/CoreUtils.mqh"
 #include "SignalGeneration/SignalGenerator.mqh"
 #include "TradeExecution/TradeExecutor.mqh"
+#include "ChartObjects/ChartDrawer.mqh"
 
 //+------------------------------------------------------------------+
 //| Parâmetros de entrada do EA                                     |
@@ -84,6 +85,7 @@ input bool   Debug_LogTrades = true;                  // Log de trades
 // Componentes principais
 CSignalGenerator*    g_signalGenerator = NULL;        // Gerador de sinais
 CTradeExecutor*      g_tradeExecutor = NULL;          // Executor de trades
+CChartDrawer*       g_chartDrawer = NULL;            // Desenhador de objetos
 
 // Estado do EA
 bool                 g_initialized = false;           // Status de inicialização
@@ -121,6 +123,9 @@ int OnInit()
     }
     
     // Inicializar componentes
+    g_chartDrawer = new CChartDrawer();
+    g_chartDrawer.Initialize(EA_Symbol);
+
     if(!InitializeComponents())
     {
         Print("ERRO: Falha na inicialização dos componentes");
@@ -169,6 +174,12 @@ void OnDeinit(const int reason)
     {
         delete g_tradeExecutor;
         g_tradeExecutor = NULL;
+    }
+
+    if(g_chartDrawer != NULL)
+    {
+        delete g_chartDrawer;
+        g_chartDrawer = NULL;
     }
     
     // Remover objetos gráficos
@@ -309,6 +320,8 @@ bool InitializeComponents()
         Print("ERRO: Falha ao inicializar SignalGenerator");
         return false;
     }
+    if(g_chartDrawer != NULL)
+        g_signalGenerator.SetChartDrawer(g_chartDrawer);
     
     // Criar executor de trades
     g_tradeExecutor = new CTradeExecutor();

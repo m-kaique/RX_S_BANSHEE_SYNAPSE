@@ -11,6 +11,7 @@
 #include "../TrendAnalyzerEnums.mqh"
 #include "../TrendAnalyzerConfig.mqh"
 #include "../Core/CoreUtils.mqh"
+#include "../ChartObjects/ChartDrawer.mqh"
 
 //+------------------------------------------------------------------+
 //| Classe de Suporte e Resistência                                 |
@@ -20,6 +21,7 @@ class CSupportResistance : public CObject
 private:
     SR_Level             m_levels[];         // Níveis identificados
     string               m_symbol;           // Símbolo
+    CChartDrawer*        m_drawer;           // Desenhador de objetos
     
     // Arrays para análise
     double               m_high[];           // Máximas
@@ -35,7 +37,8 @@ public:
     CSupportResistance()
     {
         m_symbol = "";
-        
+        m_drawer = NULL;
+
         ArraySetAsSeries(m_high, true);
         ArraySetAsSeries(m_low, true);
         ArraySetAsSeries(m_close, true);
@@ -66,10 +69,18 @@ public:
             CCoreUtils::LogError("Símbolo inválido para SupportResistance");
             return false;
         }
-        
+
         m_symbol = symbol;
         CCoreUtils::LogInfo("SupportResistance inicializado para " + symbol);
         return true;
+    }
+
+    //+------------------------------------------------------------------+
+    //| Definir objeto de desenho                                       |
+    //+------------------------------------------------------------------+
+    void SetChartDrawer(CChartDrawer* drawer)
+    {
+        m_drawer = drawer;
     }
     
     //+------------------------------------------------------------------+
@@ -100,8 +111,9 @@ public:
         
         // Ordenar por relevância
         SortLevelsByRelevance();
-        
+
         CCoreUtils::LogInfo("Identificados " + IntegerToString(ArraySize(m_levels)) + " níveis S/R");
+        if(m_drawer != NULL) m_drawer->UpdateSupportResistance(*this);
     }
     
     //+------------------------------------------------------------------+

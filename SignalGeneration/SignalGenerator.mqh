@@ -14,6 +14,7 @@
 #include "../TimeframeAnalysis/MultiTimeframe.mqh"
 #include "../TimeframeAnalysis/TimeframeSequencer.mqh"
 #include "ConfluenceAnalyzer.mqh"
+#include "../ChartObjects/ChartDrawer.mqh"
 
 //+------------------------------------------------------------------+
 //| Classe Geradora de Sinais                                       |
@@ -27,6 +28,7 @@ private:
     CMultiTimeframe*     m_multiTimeframe;   // Análise multi-timeframe
     CTimeframeSequencer* m_sequencer;        // Sequenciador
     CConfluenceAnalyzer* m_confluence;       // Analisador de confluência
+    CChartDrawer*        m_drawer;           // Desenhador de objetos
     
     // Sinais gerados
     TradingSignal        m_currentSignal;    // Sinal atual
@@ -48,6 +50,8 @@ public:
     CSignalGenerator()
     {
         m_symbol = "";
+
+        m_drawer = NULL;
         
         m_multiTimeframe = NULL;
         m_sequencer = NULL;
@@ -112,11 +116,22 @@ public:
             CCoreUtils::LogError("Falha ao inicializar ConfluenceAnalyzer");
             return false;
         }
+        if(m_drawer != NULL)
+            m_confluence.SetChartDrawer(m_drawer);
         
         m_initialized = true;
         CCoreUtils::LogInfo("SignalGenerator inicializado com sucesso para " + symbol);
-        
+
         return true;
+    }
+
+    //+------------------------------------------------------------------+
+    //| Definir objeto de desenho                                       |
+    //+------------------------------------------------------------------+
+    void SetChartDrawer(CChartDrawer* drawer)
+    {
+        m_drawer = drawer;
+        if(m_confluence != NULL) m_confluence.SetChartDrawer(drawer);
     }
     
     //+------------------------------------------------------------------+
