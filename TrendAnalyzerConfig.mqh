@@ -146,7 +146,7 @@
 //+------------------------------------------------------------------+
 //| Configurações Específicas do WINM25                             |
 //+------------------------------------------------------------------+
-#define WINM25_SYMBOL           "WINM25" // Símbolo padrão
+#define WINM25_SYMBOL           "WINQ25" // Símbolo padrão
 #define WINM25_POINT_VALUE      1.0      // Valor do ponto
 #define WINM25_TICK_SIZE        5        // Tamanho do tick
 #define WINM25_CONTRACT_SIZE    1        // Tamanho do contrato

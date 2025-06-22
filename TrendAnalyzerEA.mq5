@@ -24,7 +24,7 @@
 
 // === CONFIGURAÇÕES GERAIS ===
 input group "=== CONFIGURAÇÕES GERAIS ==="
-input string EA_Symbol = "WINM25";                    // Símbolo para trading
+input string EA_Symbol = "WINQ25";                    // Símbolo para trading
 input bool   EA_Enabled = true;                       // Habilitar EA
 input bool   EA_AllowLong = true;                     // Permitir operações de compra
 input bool   EA_AllowShort = true;                    // Permitir operações de venda
