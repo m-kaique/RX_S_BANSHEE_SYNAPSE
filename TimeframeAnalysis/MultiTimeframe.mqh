@@ -116,7 +116,13 @@ public:
     //+------------------------------------------------------------------+
     bool AnalyzeAllTimeframes(string symbol = "")
     {
-        if(symbol != "") m_symbol = symbol;
+        if(symbol != "")
+            m_symbol = symbol;
+        else if(m_symbol == "")
+        {
+            CCoreUtils::LogError("Símbolo não especificado para AnalyzeAllTimeframes");
+            return false;
+        }
         
         if(!m_initialized)
         {

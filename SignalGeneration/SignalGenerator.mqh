@@ -174,6 +174,9 @@ public:
         InitializeSignal(m_currentSignal);
         m_currentSignal.symbol = m_symbol;
         m_currentSignal.timestamp = TimeCurrent();
+        string timestampStr = TimeToString(m_currentSignal.timestamp,
+                                           TIME_DATE|TIME_SECONDS);
+        CCoreUtils::LogInfo("Timestamp do sinal: " + timestampStr);
         
         // Executar análise multi-timeframe
         if(!m_multiTimeframe.AnalyzeAllTimeframes(m_symbol))
