@@ -380,8 +380,11 @@ bool InitializeComponents()
     if(!g_signalGenerator.Initialize(EA_Symbol))
     {
         Print("ERRO: Falha ao inicializar SignalGenerator");
-        delete g_signalGenerator;
-        g_signalGenerator = NULL;
+        if(g_signalGenerator != NULL)
+        {
+            delete g_signalGenerator;
+            g_signalGenerator = NULL;
+        }
         return false;
     }
 
@@ -390,17 +393,26 @@ bool InitializeComponents()
     if(g_tradeExecutor == NULL)
     {
         Print("ERRO: Falha ao alocar TradeExecutor");
-        delete g_signalGenerator;
-        g_signalGenerator = NULL;
+        if(g_signalGenerator != NULL)
+        {
+            delete g_signalGenerator;
+            g_signalGenerator = NULL;
+        }
         return false;
     }
     if(!g_tradeExecutor.Initialize(EA_Symbol, EA_MagicNumber))
     {
         Print("ERRO: Falha ao inicializar TradeExecutor");
-        delete g_signalGenerator;
-        g_signalGenerator = NULL;
-        delete g_tradeExecutor;
-        g_tradeExecutor = NULL;
+        if(g_signalGenerator != NULL)
+        {
+            delete g_signalGenerator;
+            g_signalGenerator = NULL;
+        }
+        if(g_tradeExecutor != NULL)
+        {
+            delete g_tradeExecutor;
+            g_tradeExecutor = NULL;
+        }
         return false;
     }
     

@@ -410,25 +410,51 @@ private:
     bool GetHistoricalData(ENUM_TIMEFRAMES tf, int bars)
     {
         // Redimensionar arrays
-        if(ArrayResize(m_high, bars) < 0 || 
+        if(ArrayResize(m_high, bars) < 0 ||
            ArrayResize(m_low, bars) < 0 ||
            ArrayResize(m_close, bars) < 0 ||
            ArrayResize(m_time, bars) < 0 ||
            ArrayResize(m_volume, bars) < 0)
         {
+            CCoreUtils::LogError("Falha ao redimensionar arrays de histórico");
             return false;
         }
-        
-        // Copiar dados
-        if(CopyHigh(m_symbol, tf, 0, bars, m_high) < 0 ||
-           CopyLow(m_symbol, tf, 0, bars, m_low) < 0 ||
-           CopyClose(m_symbol, tf, 0, bars, m_close) < 0 ||
-           CopyTime(m_symbol, tf, 0, bars, m_time) < 0 ||
-           CopyTickVolume(m_symbol, tf, 0, bars, m_volume) < 0)
+
+        // Copiar dados com tentativa de recuperação
+        bool success = false;
+        for(int attempt=0; attempt<2 && !success; attempt++)
         {
+            int highCopied   = CopyHigh(m_symbol, tf, 0, bars, m_high);
+            int lowCopied    = CopyLow(m_symbol, tf, 0, bars, m_low);
+            int closeCopied  = CopyClose(m_symbol, tf, 0, bars, m_close);
+            int timeCopied   = CopyTime(m_symbol, tf, 0, bars, m_time);
+            int volumeCopied = CopyTickVolume(m_symbol, tf, 0, bars, m_volume);
+
+            if(highCopied == bars && lowCopied == bars &&
+               closeCopied == bars && timeCopied == bars &&
+               volumeCopied == bars)
+            {
+                success = true;
+            }
+            else
+            {
+                CCoreUtils::LogWarning("Falha ao copiar histórico (tentativa " +
+                                      IntegerToString(attempt+1) + ") - High:" +
+                                      IntegerToString(highCopied) +
+                                      " Low:" + IntegerToString(lowCopied) +
+                                      " Close:" + IntegerToString(closeCopied) +
+                                      " Time:" + IntegerToString(timeCopied));
+                RefreshRates();
+                Sleep(50);
+            }
+        }
+
+        if(!success)
+        {
+            CCoreUtils::LogError("Falha definitiva ao copiar histórico");
             return false;
         }
-        
+
         return true;
     }
     

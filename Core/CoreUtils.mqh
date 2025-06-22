@@ -224,8 +224,14 @@ public:
     //+------------------------------------------------------------------+
     static double CalculateATR(const double &high[], const double &low[], const double &close[], int period, int start = 0)
     {
-        if(ArraySize(high) < period + start + 1 || 
-           ArraySize(low) < period + start + 1 || 
+        if(period <= 0)
+        {
+            LogError("Período inválido em CalculateATR");
+            return 0;
+        }
+
+        if(ArraySize(high) < period + start + 1 ||
+           ArraySize(low) < period + start + 1 ||
            ArraySize(close) < period + start + 1)
             return 0;
         
