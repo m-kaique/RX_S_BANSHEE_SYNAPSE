@@ -13,6 +13,7 @@
 #include "../TrendAnalyzerEnums.mqh"
 #include "../TrendAnalyzerConfig.mqh"
 #include "../Core/CoreUtils.mqh"
+#include "../Visualization/IValidationVisualizer.mqh"
 
 //+------------------------------------------------------------------+
 //| Classe de Suporte e Resistência                                 |
@@ -22,6 +23,7 @@ class CSupportResistance : public CObject
 private:
     SR_Level             m_levels[];         // Níveis identificados
     string               m_symbol;           // Símbolo
+    IValidationVisualizer* m_visualizer;    // Visualizador opcional
     
     // Arrays para análise
     double               m_high[];           // Máximas
@@ -37,6 +39,7 @@ public:
     CSupportResistance()
     {
         m_symbol = "";
+        m_visualizer = NULL;
         
         ArraySetAsSeries(m_high, true);
         ArraySetAsSeries(m_low, true);
@@ -73,6 +76,11 @@ public:
         CCoreUtils::LogInfo("SupportResistance inicializado para " + symbol);
         return true;
     }
+
+    void SetVisualizer(IValidationVisualizer* visualizer)
+    {
+        m_visualizer = visualizer;
+    }
     
     //+------------------------------------------------------------------+
     //| Identificar níveis de suporte e resistência                    |
@@ -102,8 +110,10 @@ public:
         
         // Ordenar por relevância
         SortLevelsByRelevance();
-        
+
         CCoreUtils::LogInfo("Identificados " + IntegerToString(ArraySize(m_levels)) + " níveis S/R");
+        if(m_visualizer != NULL)
+            m_visualizer.UpdateSupportResistance((const CSupportResistance*)this);
     }
     
     //+------------------------------------------------------------------+
@@ -289,7 +299,7 @@ public:
     //+------------------------------------------------------------------+
     //| Obter todos os níveis                                          |
     //+------------------------------------------------------------------+
-    void GetAllLevels(SR_Level &levels[])
+    void GetAllLevels(SR_Level &levels[]) const
     {
         ArrayResize(levels, ArraySize(m_levels));
         for(int i = 0; i < ArraySize(m_levels); i++)

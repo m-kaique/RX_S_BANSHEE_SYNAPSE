@@ -13,6 +13,7 @@
 #include "../TrendAnalyzerEnums.mqh"
 #include "../TrendAnalyzerConfig.mqh"
 #include "../Core/CoreUtils.mqh"
+#include "../Visualization/IValidationVisualizer.mqh"
 
 //+------------------------------------------------------------------+
 //| Classe de Linhas de Tendência                                   |
@@ -23,6 +24,7 @@ private:
     TrendLine            m_lta;              // Linha de Tendência de Alta
     TrendLine            m_ltb;              // Linha de Tendência de Baixa
     string               m_symbol;           // Símbolo
+    IValidationVisualizer* m_visualizer;    // Visualizador opcional
     
     // Arrays para análise
     double               m_high[];           // Máximas
@@ -48,6 +50,7 @@ public:
     CTrendLines()
     {
         m_symbol = "";
+        m_visualizer = NULL;
         InitializeTrendLine(m_lta);
         InitializeTrendLine(m_ltb);
         
@@ -79,10 +82,15 @@ public:
             CCoreUtils::LogError("Símbolo inválido para TrendLines");
             return false;
         }
-        
+
         m_symbol = symbol;
         CCoreUtils::LogInfo("TrendLines inicializado para " + symbol);
         return true;
+    }
+
+    void SetVisualizer(IValidationVisualizer* visualizer)
+    {
+        m_visualizer = visualizer;
     }
     
     //+------------------------------------------------------------------+
@@ -121,6 +129,8 @@ public:
         }
         
         CCoreUtils::LogInfo("LTA calculada com sucesso. Toques: " + IntegerToString(m_lta.touches));
+        if(m_visualizer != NULL)
+            m_visualizer.UpdateTrendLines((const CTrendLines*)this);
         return true;
     }
     
@@ -160,6 +170,8 @@ public:
         }
         
         CCoreUtils::LogInfo("LTB calculada com sucesso. Toques: " + IntegerToString(m_ltb.touches));
+        if(m_visualizer != NULL)
+            m_visualizer.UpdateTrendLines((const CTrendLines*)this);
         return true;
     }
     

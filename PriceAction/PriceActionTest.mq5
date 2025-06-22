@@ -17,6 +17,7 @@
 #include "Channels.mqh"
 #include "AdvancedPatterns.mqh"
 #include "PriceActionUtils.mqh"
+#include "../Visualization/ValidationVisualizer.mqh"
 
 //+------------------------------------------------------------------+
 //| Parâmetros de entrada                                           |
@@ -66,12 +67,17 @@ bool TestTrendLines()
     Print("--- Teste 1: Linhas de Tendência ---");
     
     CTrendLines* trendLines = new CTrendLines();
+    CValidationVisualizer* viz = new CValidationVisualizer();
+
+    viz.Initialize(TestSymbol);
+    trendLines.SetVisualizer(viz);
     
     // Inicializar
     if(!trendLines.Initialize(TestSymbol))
     {
         Print("FALHA: Não foi possível inicializar TrendLines");
         delete trendLines;
+        delete viz;
         return false;
     }
     
@@ -105,6 +111,7 @@ bool TestTrendLines()
     }
     
     delete trendLines;
+    delete viz;
     
     Print("SUCESSO: Teste de Linhas de Tendência");
     return true;
@@ -118,12 +125,17 @@ bool TestSupportResistance()
     Print("--- Teste 2: Suporte e Resistência ---");
     
     CSupportResistance* sr = new CSupportResistance();
+    CValidationVisualizer* viz = new CValidationVisualizer();
+
+    viz.Initialize(TestSymbol);
+    sr.SetVisualizer(viz);
     
     // Inicializar
     if(!sr.Initialize(TestSymbol))
     {
         Print("FALHA: Não foi possível inicializar SupportResistance");
         delete sr;
+        delete viz;
         return false;
     }
     
@@ -158,6 +170,7 @@ bool TestSupportResistance()
     }
     
     delete sr;
+    delete viz;
     
     Print("SUCESSO: Teste de Suporte e Resistência");
     return true;
