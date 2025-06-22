@@ -44,7 +44,7 @@ input int    Risk_MaxTrades = 5;                      // Máximo de trades por d
 input group "=== CONFIGURAÇÕES DE SINAL ==="
 input double Signal_MinStrength = 70.0;               // Força mínima do sinal (%)
 input double Signal_MinConfluence = 60.0;             // Confluência mínima (%)
-input int    Signal_UpdateInterval = 300;             // Intervalo de atualização (segundos)
+input int    Signal_UpdateInterval = 180;             // Intervalo de atualização (segundos)
 input bool   Signal_OnlyLiquidityHours = true;        // Operar apenas em horários de liquidez
 
 // === CONFIGURAÇÕES DE TIMEFRAME ===

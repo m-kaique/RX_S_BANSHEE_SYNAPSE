@@ -260,7 +260,7 @@ private:
     }
     
     //+------------------------------------------------------------------+
-    //| Passo 1: Análise da Tendência Principal (H4)                  |
+    //| Passo 1: Análise da Tendência Principal (H4)                     |
     //+------------------------------------------------------------------+
     bool ExecuteStep1_TrendPrincipal(const TrendAnalysisResult &resultH4)
     {

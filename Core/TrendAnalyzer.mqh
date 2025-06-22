@@ -240,7 +240,8 @@ public:
         
         // Cache do resultado
         CacheTrendResult(tf, trend);
-        
+
+        Print("TENDENCIA CRUA SEM VALIDAÇÃO DE FORÇA ---->>>>>>: " + EnumToString(trend));
         return trend;
     }
     
