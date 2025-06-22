@@ -275,8 +275,8 @@ public:
         // Contar barras consecutivas na direção da tendência
         for(int i = 1; i < MathMin(20, ArraySize(m_close)); i++)
         {
-            bool bullishBar = (m_close[i-1] > m_close[i]);
-            bool bearishBar = (m_close[i-1] < m_close[i]);
+            bool bullishBar = (m_close[i] > m_close[i-1]);
+            bool bearishBar = (m_close[i] < m_close[i-1]);
 
             if((currentTrend == TREND_UP && bullishBar) ||
                (currentTrend == TREND_DOWN && bearishBar))

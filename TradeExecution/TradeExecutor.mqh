@@ -14,6 +14,13 @@
 #include "../TrendAnalyzerConfig.mqh"
 #include "../Core/CoreUtils.mqh"
 
+extern int    g_winningTrades;
+extern int    g_losingTrades;
+extern double g_dailyProfit;
+extern double g_dailyLoss;
+extern double g_totalProfit;
+extern double g_totalLoss;
+
 //+------------------------------------------------------------------+
 //| Classe Executora de Trades                                      |
 //+------------------------------------------------------------------+
@@ -662,39 +669,47 @@ private:
     void OnPositionClosed()
     {
         // Atualizar estatísticas
+        double positionProfit = 0;
+
         if(HistorySelectByPosition(m_currentTicket))
         {
             int dealsTotal = HistoryDealsTotal();
-            
+
             for(int i = 0; i < dealsTotal; i++)
             {
                 ulong dealTicket = HistoryDealGetTicket(i);
-                
+
                 if(HistoryDealGetInteger(dealTicket, DEAL_POSITION_ID) == m_currentTicket)
                 {
-                    double profit = HistoryDealGetDouble(dealTicket, DEAL_PROFIT);
-                    
-                    if(profit > 0)
-                    {
-                        m_winningTrades++;
-                        m_totalProfit += profit;
-                    }
-                    else if(profit < 0)
-                    {
-                        m_losingTrades++;
-                        m_totalLoss += MathAbs(profit);
-                    }
-                    
-                    break;
+                    positionProfit += HistoryDealGetDouble(dealTicket, DEAL_PROFIT);
                 }
             }
         }
+
+        if(positionProfit > 0)
+        {
+            m_winningTrades++;
+            m_totalProfit += positionProfit;
+
+            g_winningTrades++;
+            g_totalProfit += positionProfit;
+            g_dailyProfit += positionProfit;
+        }
+        else if(positionProfit < 0)
+        {
+            m_losingTrades++;
+            m_totalLoss += MathAbs(positionProfit);
+
+            g_losingTrades++;
+            g_totalLoss += MathAbs(positionProfit);
+            g_dailyLoss += MathAbs(positionProfit);
+        }
         
+        CCoreUtils::LogInfo("Posição fechada - Ticket: " + IntegerToString(m_currentTicket));
+
         m_hasPosition = false;
         m_currentTicket = 0;
         m_partialClosed = false;
-        
-        CCoreUtils::LogInfo("Posição fechada - Ticket: " + IntegerToString(m_currentTicket));
     }
     
 public:

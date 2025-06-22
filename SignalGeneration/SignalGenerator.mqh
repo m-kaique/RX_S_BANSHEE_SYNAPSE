@@ -16,6 +16,7 @@
 #include "../TimeframeAnalysis/TimeframeSequencer.mqh"
 #include "ConfluenceAnalyzer.mqh"
 
+
 //+------------------------------------------------------------------+
 //| Classe Geradora de Sinais                                       |
 //+------------------------------------------------------------------+
@@ -321,8 +322,8 @@ private:
             return false;
         }
         
-        // Verificar liquidez
-        if(!CCoreUtils::IsLiquidityHours(currentTime))
+        // Verificar liquidez conforme configuração
+        if(Signal_OnlyLiquidityHours && !CCoreUtils::IsLiquidityHours(currentTime))
         {
             return false;
         }
@@ -513,8 +514,9 @@ private:
             atr = CCoreUtils::CalculateATR(high, low, close, 20);
         }
 
-        if(atr <= 0) atr = 100; // Valor padrão em pontos
-        
+        if(atr <= 0)
+            atr = CCoreUtils::PointsToPrice(100, m_symbol); // Valor padrão em 100 pontos
+
         double stopDistance = atr * STOP_LOSS_ATR_MULTIPLIER;
         double takeProfitDistance = stopDistance * RISK_REWARD_RATIO;
         
@@ -531,19 +533,15 @@ private:
             stopDistance *= 1.2;
         }
         
-        // Converter para preços
-        double stopPoints = CCoreUtils::PointsToPrice(stopDistance, m_symbol);
-        double tpPoints = CCoreUtils::PointsToPrice(takeProfitDistance, m_symbol);
-        
         if(direction == TREND_UP)
         {
-            m_currentSignal.stopLoss = m_currentSignal.entryPrice - stopPoints;
-            m_currentSignal.takeProfit = m_currentSignal.entryPrice + tpPoints;
+            m_currentSignal.stopLoss = m_currentSignal.entryPrice - stopDistance;
+            m_currentSignal.takeProfit = m_currentSignal.entryPrice + takeProfitDistance;
         }
         else
         {
-            m_currentSignal.stopLoss = m_currentSignal.entryPrice + stopPoints;
-            m_currentSignal.takeProfit = m_currentSignal.entryPrice - tpPoints;
+            m_currentSignal.stopLoss = m_currentSignal.entryPrice + stopDistance;
+            m_currentSignal.takeProfit = m_currentSignal.entryPrice - takeProfitDistance;
         }
         
         // Calcular risk/reward
