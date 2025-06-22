@@ -135,9 +135,19 @@ int OnInit()
         if(!InitializeComponents())
         {
             Print("ERRO: Falha na inicialização dos componentes");
+            CleanupComponents();
             return INIT_FAILED;
         }
-        g_initialized = true;
+        if(ComponentsValid())
+        {
+            g_initialized = true;
+        }
+        else
+        {
+            Print("ERRO: Componentes inválidos após inicialização");
+            CleanupComponents();
+            return INIT_FAILED;
+        }
     }
     else
     {
@@ -172,17 +182,7 @@ void OnDeinit(const int reason)
     Print("=== FINALIZANDO TREND ANALYZER EA ===");
     
     // Limpar componentes
-    if(g_signalGenerator != NULL)
-    {
-        delete g_signalGenerator;
-        g_signalGenerator = NULL;
-    }
-    
-    if(g_tradeExecutor != NULL)
-    {
-        delete g_tradeExecutor;
-        g_tradeExecutor = NULL;
-    }
+    CleanupComponents();
     
     // Remover objetos gráficos
     if(Debug_ShowPanel)
@@ -220,15 +220,38 @@ void OnTick()
         return;
     }
 
+    // Se já inicializado, verificar integridade dos componentes
+    if(g_initialized && !ComponentsValid())
+    {
+        Print("ERRO: Componentes inválidos detectados. Reinicializando...");
+        CleanupComponents();
+        g_initialized = false;
+    }
+
+    // Tentar inicialização se não estiver aguardando histórico
+    if(!g_initialized && !g_waitForHistory)
+    {
+        Print("Tentando inicialização dos componentes...");
+        if(!InitializeComponents() || !ComponentsValid())
+        {
+            Print("ERRO: Falha na inicialização dos componentes");
+            CleanupComponents();
+            return;
+        }
+        g_initialized = true;
+        Print("Componentes inicializados com sucesso");
+    }
+
     // Se ainda aguardando histórico, verificar condição
     if(g_waitForHistory && !g_initialized)
     {
         if(CCoreUtils::HasMinimumBars(EA_Symbol, PERIOD_H4, MA_PERIOD_200))
         {
             Print("Histórico mínimo alcançado. Inicializando componentes...");
-            if(!InitializeComponents())
+            if(!InitializeComponents() || !ComponentsValid())
             {
                 Print("ERRO: Falha na inicialização dos componentes");
+                CleanupComponents();
                 return;
             }
             g_initialized = true;
@@ -349,17 +372,35 @@ bool InitializeComponents()
 {
     // Criar gerador de sinais
     g_signalGenerator = new CSignalGenerator();
+    if(g_signalGenerator == NULL)
+    {
+        Print("ERRO: Falha ao alocar SignalGenerator");
+        return false;
+    }
     if(!g_signalGenerator.Initialize(EA_Symbol))
     {
         Print("ERRO: Falha ao inicializar SignalGenerator");
+        delete g_signalGenerator;
+        g_signalGenerator = NULL;
         return false;
     }
-    
+
     // Criar executor de trades
     g_tradeExecutor = new CTradeExecutor();
+    if(g_tradeExecutor == NULL)
+    {
+        Print("ERRO: Falha ao alocar TradeExecutor");
+        delete g_signalGenerator;
+        g_signalGenerator = NULL;
+        return false;
+    }
     if(!g_tradeExecutor.Initialize(EA_Symbol, EA_MagicNumber))
     {
         Print("ERRO: Falha ao inicializar TradeExecutor");
+        delete g_signalGenerator;
+        g_signalGenerator = NULL;
+        delete g_tradeExecutor;
+        g_tradeExecutor = NULL;
         return false;
     }
     
@@ -381,6 +422,35 @@ bool InitializeComponents()
     }
 
     return true;
+}
+
+//+------------------------------------------------------------------+
+//| Verificar se componentes estão válidos                         |
+//+------------------------------------------------------------------+
+bool ComponentsValid()
+{
+    if(g_signalGenerator == NULL || g_tradeExecutor == NULL)
+        return false;
+    if(!g_signalGenerator.AreModulesInitialized() || !g_tradeExecutor.IsInitialized())
+        return false;
+    return true;
+}
+
+//+------------------------------------------------------------------+
+//| Liberar componentes                                              |
+//+------------------------------------------------------------------+
+void CleanupComponents()
+{
+    if(g_signalGenerator != NULL)
+    {
+        delete g_signalGenerator;
+        g_signalGenerator = NULL;
+    }
+    if(g_tradeExecutor != NULL)
+    {
+        delete g_tradeExecutor;
+        g_tradeExecutor = NULL;
+    }
 }
 
 //+------------------------------------------------------------------+
