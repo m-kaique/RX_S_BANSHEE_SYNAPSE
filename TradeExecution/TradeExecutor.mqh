@@ -7,6 +7,7 @@
 
 #ifndef TRADE_EXECUTOR_H
 #define TRADE_EXECUTOR_H
+#property strict
 
 #include <Object.mqh>
 #include <Trade/Trade.mqh>
@@ -210,7 +211,9 @@ public:
         }
         else
         {
-            CCoreUtils::LogError("Falha ao abrir posição de compra - Erro: " + IntegerToString(GetLastError()));
+            int ret = m_trade.ResultRetcode();
+            string msg = TradeResultRetcodeDescription(ret);
+            CCoreUtils::LogError("Falha ao abrir posição de compra - Retcode: " + IntegerToString(ret) + " - " + msg);
         }
         
         return result;
@@ -269,7 +272,9 @@ public:
         }
         else
         {
-            CCoreUtils::LogError("Falha ao abrir posição de venda - Erro: " + IntegerToString(GetLastError()));
+            int ret = m_trade.ResultRetcode();
+            string msg = TradeResultRetcodeDescription(ret);
+            CCoreUtils::LogError("Falha ao abrir posição de venda - Retcode: " + IntegerToString(ret) + " - " + msg);
         }
         
         return result;

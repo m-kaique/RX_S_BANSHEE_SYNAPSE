@@ -7,6 +7,7 @@
 
 #ifndef SIGNAL_GENERATOR_H
 #define SIGNAL_GENERATOR_H
+#property strict
 
 #include <Object.mqh>
 #include "../TrendAnalyzerEnums.mqh"
@@ -74,8 +75,28 @@ public:
         if(m_multiTimeframe != NULL) delete m_multiTimeframe;
         if(m_sequencer != NULL) delete m_sequencer;
         if(m_confluence != NULL) delete m_confluence;
-        
+
         ArrayFree(m_signalHistory);
+    }
+
+    // Limpar objetos alocados em caso de falha de inicialização
+    void Cleanup()
+    {
+        if(m_multiTimeframe != NULL)
+        {
+            delete m_multiTimeframe;
+            m_multiTimeframe = NULL;
+        }
+        if(m_sequencer != NULL)
+        {
+            delete m_sequencer;
+            m_sequencer = NULL;
+        }
+        if(m_confluence != NULL)
+        {
+            delete m_confluence;
+            m_confluence = NULL;
+        }
     }
     
     //+------------------------------------------------------------------+
@@ -88,7 +109,10 @@ public:
             CCoreUtils::LogError("Símbolo inválido para SignalGenerator");
             return false;
         }
-        
+
+        // Garantir que não existam objetos alocados previamente
+        Cleanup();
+
         m_symbol = symbol;
         
         // Criar componentes de análise
@@ -100,18 +124,21 @@ public:
         if(!m_multiTimeframe.Initialize(symbol))
         {
             CCoreUtils::LogError("Falha ao inicializar MultiTimeframe");
+            Cleanup();
             return false;
         }
-        
+
         if(!m_sequencer.Initialize(symbol))
         {
             CCoreUtils::LogError("Falha ao inicializar TimeframeSequencer");
+            Cleanup();
             return false;
         }
-        
+
         if(!m_confluence.Initialize(symbol))
         {
             CCoreUtils::LogError("Falha ao inicializar ConfluenceAnalyzer");
+            Cleanup();
             return false;
         }
         

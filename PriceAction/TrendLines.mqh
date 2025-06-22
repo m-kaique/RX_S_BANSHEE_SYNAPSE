@@ -7,6 +7,7 @@
 
 #ifndef TREND_LINES_H
 #define TREND_LINES_H
+#property strict
 
 #include <Object.mqh>
 #include "../TrendAnalyzerEnums.mqh"

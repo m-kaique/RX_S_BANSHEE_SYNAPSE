@@ -7,6 +7,7 @@
 
 #ifndef TREND_ANALYZER_H
 #define TREND_ANALYZER_H
+#property strict
 
 #include <Object.mqh>
 #include "../TrendAnalyzerEnums.mqh"
@@ -281,7 +282,7 @@ public:
         if(bars >= 2)
         {
             double priceDiff = m_close[0] - m_close[bars-1];
-            slopePoints = CCoreUtils::PriceToPoints(MathAbs(priceDiff), m_symbol) / bars;
+            slopePoints = MathAbs(priceDiff) / (m_pointValue * bars);
         }
         double slopeScore = MathMin(100.0, slopePoints * 2.0); // 50 pts/bar -> 100
 
@@ -291,8 +292,10 @@ public:
         double stdDev = 0;
         if(bars >= 2)
         {
-            double slope = CCoreUtils::CalculateSlope(m_time[bars-1], m_close[bars-1],
-                                                    m_time[0], m_close[0]);
+            double timeDiff = (double)(m_time[0] - m_time[bars-1]);
+            double slope = 0.0;
+            if(timeDiff != 0.0)
+                slope = (m_close[0] - m_close[bars-1]) / timeDiff;
             double intercept = m_close[0] - slope * (double)m_time[0];
             double sumSq = 0;
             for(int i=0;i<bars;i++)
@@ -303,7 +306,9 @@ public:
             }
             stdDev = MathSqrt(sumSq / bars);
         }
-        double stdPoints = CCoreUtils::PriceToPoints(stdDev, m_symbol);
+        // Converter desvio padrão para pontos diretamente para evitar
+        // dependência do utilitário
+        double stdPoints = (m_pointValue>0) ? (stdDev / m_pointValue) : 0.0;
         double consistencyScore = MathMax(0.0, 100.0 - (stdPoints * 2.0));
 
         // -------------------------------------------------------------

@@ -7,6 +7,7 @@
 
 #ifndef TIMEFRAME_SEQUENCER_H
 #define TIMEFRAME_SEQUENCER_H
+#property strict
 
 #include <Object.mqh>
 #include "../TrendAnalyzerEnums.mqh"

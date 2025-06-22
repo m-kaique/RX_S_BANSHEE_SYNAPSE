@@ -7,6 +7,7 @@
 
 #ifndef MOVING_AVERAGES_H
 #define MOVING_AVERAGES_H
+#property strict
 
 #include <Object.mqh>
 #include "../TrendAnalyzerEnums.mqh"
@@ -20,6 +21,7 @@ class CMovingAverages : public CObject
 {
 private:
     string               m_symbol;           // Símbolo
+    double               m_pointValue;       // Valor do ponto
     
     // Handles dos indicadores
     int                  m_handleEMA9;       // Handle EMA 9 (M15)
@@ -49,6 +51,7 @@ public:
     CMovingAverages()
     {
         m_symbol = "";
+        m_pointValue = 0.0;
         m_handleEMA9 = INVALID_HANDLE;
         m_handleEMA21 = INVALID_HANDLE;
         m_handleEMA50 = INVALID_HANDLE;
@@ -97,8 +100,14 @@ public:
             CCoreUtils::LogError("Símbolo inválido para MovingAverages");
             return false;
         }
-        
+
         m_symbol = symbol;
+        m_pointValue = SymbolInfoDouble(symbol, SYMBOL_POINT);
+        if(m_pointValue <= 0)
+        {
+            CCoreUtils::LogError("Falha ao obter valor de ponto para " + symbol);
+            return false;
+        }
         
         // Criar handles dos indicadores conforme especificações do guia
         
@@ -255,10 +264,10 @@ public:
                 return 0;
         }
         
-        if(maValue == 0) return 0;
-        
-        // Retornar distância em pontos
-        return CCoreUtils::PriceToPoints(price - maValue, m_symbol);
+        if(maValue == 0 || m_pointValue <= 0) return 0;
+
+        // Converter diferença para pontos diretamente
+        return (price - maValue) / m_pointValue;
     }
     
     //+------------------------------------------------------------------+

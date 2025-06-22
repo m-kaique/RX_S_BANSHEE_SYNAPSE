@@ -8,6 +8,7 @@
 #property copyright "Manus AI"
 #property version   "1.0"
 #property script_show_inputs
+#property strict
 
 #include "../TrendAnalyzerEnums.mqh"
 #include "../TrendAnalyzerConfig.mqh"

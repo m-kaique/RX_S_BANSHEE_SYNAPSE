@@ -7,6 +7,7 @@
 
 #ifndef CORE_UTILS_H
 #define CORE_UTILS_H
+#property strict
 
 #include "../TrendAnalyzerEnums.mqh"
 #include "../TrendAnalyzerConfig.mqh"

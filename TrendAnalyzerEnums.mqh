@@ -7,6 +7,7 @@
 
 #ifndef TREND_ANALYZER_ENUMS_H
 #define TREND_ANALYZER_ENUMS_H
+#property strict
 
 //+------------------------------------------------------------------+
 //| Enumerações de Direção de Tendência                             |

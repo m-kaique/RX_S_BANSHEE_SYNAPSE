@@ -7,6 +7,7 @@
 
 #ifndef ADVANCED_PATTERNS_H
 #define ADVANCED_PATTERNS_H
+#property strict
 
 #include <Object.mqh>
 #include "../TrendAnalyzerEnums.mqh"
