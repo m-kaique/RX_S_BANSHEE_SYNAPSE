@@ -113,7 +113,7 @@ public:
 
         CCoreUtils::LogInfo("Identificados " + IntegerToString(ArraySize(m_levels)) + " níveis S/R");
         if(m_visualizer != NULL)
-            m_visualizer.UpdateSupportResistance(this);
+            m_visualizer.UpdateSupportResistance((const CSupportResistance*)this);
     }
     
     //+------------------------------------------------------------------+
@@ -299,7 +299,7 @@ public:
     //+------------------------------------------------------------------+
     //| Obter todos os níveis                                          |
     //+------------------------------------------------------------------+
-    void GetAllLevels(SR_Level &levels[])
+    void GetAllLevels(SR_Level &levels[]) const
     {
         ArrayResize(levels, ArraySize(m_levels));
         for(int i = 0; i < ArraySize(m_levels); i++)
