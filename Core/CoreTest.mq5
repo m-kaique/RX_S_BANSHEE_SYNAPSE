@@ -146,7 +146,7 @@ bool TestTrendAnalysis()
         }
         
         // Testar força da tendência
-        double strength = analyzer.GetTrendStrength(timeframes[i]);
+        double strength = analyzer.CalculateTrendStrength(timeframes[i], trend);
         if(strength < 0 || strength > 100)
         {
             Print("FALHA: Força da tendência fora do range (0-100): ", strength);

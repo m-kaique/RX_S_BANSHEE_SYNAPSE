@@ -161,7 +161,7 @@ bool TestCoreModule()
 
     TrendAnalysisResult result;
     result.trendDirection   = trend;
-    result.trendStrength    = analyzer.GetTrendStrength(PERIOD_H1);
+    result.trendStrength    = analyzer.CalculateTrendStrength(PERIOD_H1, trend);
     result.hasSequence      = false;
     result.sequenceType     = SEQUENCE_NONE;
     result.sequenceStrength = 0;
