@@ -259,27 +259,26 @@ public:
     }
     
     //+------------------------------------------------------------------+
-    //| Obter força da tendência (0-100)                                |
+    //| Calcular força da tendência usando direção fornecida (0-100)    |
     //+------------------------------------------------------------------+
-    double GetTrendStrength(ENUM_TIMEFRAMES tf)
+    double CalculateTrendStrength(ENUM_TIMEFRAMES tf, ENUM_TREND_DIRECTION currentTrend)
     {
-        if(!GetHistoricalData(tf, 50))
-            return 0;
-        
-        double strength = 0;
-        int consecutiveBars = 0;
-        ENUM_TREND_DIRECTION currentTrend = AnalyzeTrend(tf);
-        
         if(currentTrend == TREND_NEUTRAL)
             return 0;
-        
+
+        if(!GetHistoricalData(tf, 50))
+            return 0;
+
+        double strength = 0;
+        int consecutiveBars = 0;
+
         // Contar barras consecutivas na direção da tendência
         for(int i = 1; i < MathMin(20, ArraySize(m_close)); i++)
         {
             bool bullishBar = (m_close[i-1] > m_close[i]);
             bool bearishBar = (m_close[i-1] < m_close[i]);
-            
-            if((currentTrend == TREND_UP && bullishBar) || 
+
+            if((currentTrend == TREND_UP && bullishBar) ||
                (currentTrend == TREND_DOWN && bearishBar))
             {
                 consecutiveBars++;
@@ -289,10 +288,10 @@ public:
                 break;
             }
         }
-        
+
         // Calcular força baseada em barras consecutivas e amplitude
         strength = MathMin(100, consecutiveBars * 5); // Máximo 100%
-        
+
         // Ajustar baseado na amplitude do movimento
         if(ArraySize(m_close) >= 20)
         {
@@ -300,15 +299,24 @@ public:
             double lowestLow = m_low[ArrayMinimum(m_low, 0, 20)];
             double range = highestHigh - lowestLow;
             double currentRange = MathAbs(m_close[0] - m_close[19]);
-            
+
             if(range > 0)
             {
                 double rangeRatio = currentRange / range;
                 strength *= rangeRatio;
             }
         }
-        
+
         return MathMin(100, MathMax(0, strength));
+    }
+
+    //+------------------------------------------------------------------+
+    //| Obter força da tendência (0-100)                                |
+    //+------------------------------------------------------------------+
+    double GetTrendStrength(ENUM_TIMEFRAMES tf)
+    {
+        ENUM_TREND_DIRECTION trend = AnalyzeTrend(tf);
+        return CalculateTrendStrength(tf, trend);
     }
     
     //+------------------------------------------------------------------+

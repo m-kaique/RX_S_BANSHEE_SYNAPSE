@@ -375,7 +375,7 @@ private:
 
         // Preencher resultado utilizando as informações disponíveis no analisador
         result.trendDirection   = direction;
-        result.trendStrength    = analyzer.GetTrendStrength(tf);
+        result.trendStrength    = analyzer.CalculateTrendStrength(tf, direction);
         result.hasSequence      = false;
         result.sequenceType     = SEQUENCE_NONE;
         result.sequenceStrength = 0;
