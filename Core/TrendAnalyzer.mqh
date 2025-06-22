@@ -409,6 +409,13 @@ private:
     //+------------------------------------------------------------------+
     bool GetHistoricalData(ENUM_TIMEFRAMES tf, int bars)
     {
+        // Verificar símbolo disponível
+        if(!SymbolSelect(m_symbol, true))
+        {
+            CCoreUtils::LogError("Símbolo não disponível: " + m_symbol);
+            return false;
+        }
+
         // Redimensionar arrays
         if(ArrayResize(m_high, bars) < 0 ||
            ArrayResize(m_low, bars) < 0 ||
@@ -420,9 +427,10 @@ private:
             return false;
         }
 
-        // Copiar dados com tentativa de recuperação
+        // Copiar dados com validação e tentativas
         bool success = false;
-        for(int attempt=0; attempt<2 && !success; attempt++)
+        const int maxAttempts = 3;
+        for(int attempt = 0; attempt < maxAttempts && !success; attempt++)
         {
             int highCopied   = CopyHigh(m_symbol, tf, 0, bars, m_high);
             int lowCopied    = CopyLow(m_symbol, tf, 0, bars, m_low);
@@ -434,24 +442,51 @@ private:
                closeCopied == bars && timeCopied == bars &&
                volumeCopied == bars)
             {
-                success = true;
+                // Validar valores
+                bool valid = true;
+                for(int i = 0; i < bars && valid; i++)
+                {
+                    if(!MathIsValidNumber(m_high[i]) ||
+                       !MathIsValidNumber(m_low[i])  ||
+                       !MathIsValidNumber(m_close[i])||
+                       m_time[i] == 0               ||
+                       m_high[i] < m_low[i]         ||
+                       m_volume[i] < 0)
+                    {
+                        valid = false;
+                    }
+                }
+
+                if(valid)
+                {
+                    success = true;
+                }
+                else
+                {
+                    CCoreUtils::LogWarning("Dados inválidos detectados, tentativa " +
+                                          IntegerToString(attempt+1));
+                }
             }
             else
             {
-                CCoreUtils::LogWarning("Falha ao copiar histórico (tentativa " +
-                                      IntegerToString(attempt+1) + ") - High:" +
-                                      IntegerToString(highCopied) +
+                CCoreUtils::LogWarning("Falha ao copiar dados (tentativa " +
+                                      IntegerToString(attempt+1) +
+                                      ") High:" + IntegerToString(highCopied) +
                                       " Low:" + IntegerToString(lowCopied) +
                                       " Close:" + IntegerToString(closeCopied) +
-                                      " Time:" + IntegerToString(timeCopied));
-                // Aguarda um curto período para nova tentativa
-                Sleep(50);
+                                      " Time:" + IntegerToString(timeCopied) +
+                                      " Volume:" + IntegerToString(volumeCopied));
             }
+
+            // Aguardar antes da próxima tentativa
+            if(!success && attempt < maxAttempts - 1)
+                Sleep(100);
         }
 
         if(!success)
         {
-            CCoreUtils::LogError("Falha definitiva ao copiar histórico");
+            CCoreUtils::LogError("Falha definitiva ao obter dados históricos para " +
+                               EnumToString(tf));
             return false;
         }
 

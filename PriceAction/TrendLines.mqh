@@ -344,9 +344,18 @@ private:
     bool IdentifyPivotPoints(bool findHighs)
     {
         ArrayFree(m_pivots);
-        
+
         int arraySize = findHighs ? ArraySize(m_high) : ArraySize(m_low);
-        if(arraySize < 10) return false;
+        if(arraySize < 10)
+            return false;
+
+        if(ArraySize(m_high) != ArraySize(m_low) ||
+           ArraySize(m_low)  != ArraySize(m_close) ||
+           ArraySize(m_close)!= ArraySize(m_time))
+        {
+            CCoreUtils::LogError("Tamanhos inconsistentes nos arrays de TrendLines");
+            return false;
+        }
         
         // Procurar pontos de pivô
         for(int i = 3; i < arraySize - 3; i++)

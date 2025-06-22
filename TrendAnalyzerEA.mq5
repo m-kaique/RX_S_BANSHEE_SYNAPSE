@@ -455,11 +455,13 @@ void CleanupComponents()
 {
     if(g_signalGenerator != NULL)
     {
+        Print("Liberando SignalGenerator");
         delete g_signalGenerator;
         g_signalGenerator = NULL;
     }
     if(g_tradeExecutor != NULL)
     {
+        Print("Liberando TradeExecutor");
         delete g_tradeExecutor;
         g_tradeExecutor = NULL;
     }
